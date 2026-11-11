@@ -1,0 +1,46 @@
+[project]
+name = "canav"
+version = "0.1.0"
+description = "CAN network for a simulated autonomous vehicle (course project)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "python-can>=4.3",
+    "cantools>=39",
+    "simpy>=4.1",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "pyyaml",
+    "rich",
+]
+
+[project.optional-dependencies]
+viz = ["pygame"]
+parquet = ["pyarrow"]
+ml = ["scikit-learn"]
+
+[dependency-groups]
+dev = ["pytest", "ruff"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/canav"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not vcan and not carla'"
+markers = [
+    "vcan: requires SocketCAN vcan0 (run scripts/setup_vcan.sh first)",
+    "carla: requires a running CARLA server",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
