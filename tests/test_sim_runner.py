@@ -33,13 +33,14 @@ def test_baseline_sim_within_wcrt(net):
     res = run_sim(net, cfg, seed=1)
     wcrt, _ = theory(net, cfg)
     tau = 1e9 / 500_000
-    worst: dict[int, int] = {}
+    worst: dict[tuple[str, int], int] = {}
     for f in res.frames:
         assert f.outcome == "ok"
-        worst[f.can_id] = max(worst.get(f.can_id, 0), f.t_tx_end - f.t_queued)
+        key = (f.bus, f.can_id)
+        worst[key] = max(worst.get(key, 0), f.t_tx_end - f.t_queued)
     assert set(worst) == set(wcrt)
-    for cid, r in worst.items():
-        assert r <= wcrt[cid] * 1e9 + tau + 1e-6, hex(cid)
+    for key, r in worst.items():
+        assert r <= wcrt[key] * 1e9 + tau + 1e-6, key
 
 
 @pytest.mark.parametrize("offsets", ["zero", "random"])

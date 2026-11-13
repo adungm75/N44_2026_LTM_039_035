@@ -1,0 +1,46 @@
+experiment,variant,params,seeds,bus_load_theory_max,bus_load_sim_max,theory_ok,sim_ok,worst_R_over_D,late_messages,aeb_theory_ok,aeb_sim_ok,aeb_e2e_max_s,aeb_e2e_ok,aeb_ok,all_ok,real_ok,busoff,lost_injected
+E0,baseline,{},5,0.1758,0.1758,True,True,0.24570000000000036,,True,True,0.05046,True,True,True,True,False,0
+E1,bitrate=125000,"{""sim.bitrate"": 125000}",5,0.7032,0.7032,False,False,1.5482037600000023,ObjectList_5;ObjectList_6;ObjectList_7,False,False,0.05184,True,False,False,False,False,0
+E1,bitrate=250000,"{""sim.bitrate"": 250000}",5,0.3516,0.3516,True,True,0.5688000000000009,,True,True,0.05092,True,True,True,True,False,0
+E1,bitrate=500000,"{""sim.bitrate"": 500000}",5,0.1758,0.1758,True,True,0.24570000000000036,,True,True,0.05046,True,True,True,True,False,0
+E1,bitrate=1000000,"{""sim.bitrate"": 1000000}",5,0.0879,0.0879,True,True,0.10575000000000016,,True,True,0.05023,True,True,True,True,False,0
+E2,"period_factor=1.0,dlc=4","{""network.dlc"": 4, ""network.period_factor"": 1.0}",5,0.1406,0.1406,True,True,0.15390000000000023,,True,True,0.05038,True,True,True,True,False,0
+E2,"period_factor=0.5,dlc=8","{""network.dlc"": 8, ""network.period_factor"": 0.5}",5,0.3996,0.3996,True,True,0.2673000000000004,,True,True,0.02581,True,True,True,True,False,0
+E2,"period_factor=2.0,dlc=8","{""network.dlc"": 8, ""network.period_factor"": 2.0}",5,0.0999,0.0999,True,True,0.1944000000000003,,True,True,0.099373498,False,False,True,True,False,0
+E2,"period_factor=0.5,dlc=4","{""network.dlc"": 4, ""network.period_factor"": 0.5}",5,0.2812,0.2812,True,True,0.18810000000000027,,True,True,0.02576,True,True,True,True,False,0
+E2,"period_factor=1.0,dlc=8","{""network.dlc"": 8, ""network.period_factor"": 1.0}",5,0.1998,0.1998,True,True,0.2673000000000004,,True,True,0.05054,True,True,True,True,False,0
+E2,"period_factor=2.0,dlc=4","{""network.dlc"": 4, ""network.period_factor"": 2.0}",5,0.0703,0.0703,True,True,0.13680000000000023,,True,True,0.099213498,False,False,True,True,False,0
+E3,"scheme=safety_first,target_load=0.6","{""network.scheme"": ""safety_first"", ""network.target_load"": 0.6}",5,0.6,0.6000015,True,True,0.5380092000000001,,True,True,0.05046,True,True,True,True,False,0
+E3,"scheme=safety_first,target_load=0.9","{""network.scheme"": ""safety_first"", ""network.target_load"": 0.9}",5,0.8999999309335482,0.894594,False,False,1.0221309467037214,Synth_23;Synth_24;Synth_25;Synth_26,True,True,0.05046,True,True,False,True,False,10872
+E3,"scheme=safety_first,target_load=0.3","{""network.scheme"": ""safety_first"", ""network.target_load"": 0.3}",5,0.2999999676000648,0.3,True,True,0.3805628,,True,True,0.05046,True,True,True,True,False,0
+E3,"scheme=naive,target_load=0.6","{""network.scheme"": ""naive"", ""network.target_load"": 0.6}",5,0.6,0.6000015,True,True,0.5963828,,True,True,0.05597,True,True,True,True,False,0
+E3,"scheme=naive,target_load=0.3","{""network.scheme"": ""naive"", ""network.target_load"": 0.3}",5,0.2999999676000648,0.3,True,True,0.4073828,,True,True,0.05408,True,True,True,True,False,0
+E3,"scheme=naive,target_load=0.9","{""network.scheme"": ""naive"", ""network.target_load"": 0.9}",5,0.8999999309335482,0.894594,False,False,1.0221309467037214,Synth_23;Synth_24;Synth_25;Synth_26,False,True,0.056740249,True,False,False,False,False,10872
+E4,target_load=0.7,"{""network.target_load"": 0.7}",5,0.7000000199111465,0.7000005,False,True,0.7382315,,True,True,0.05046,True,True,False,True,False,0
+E4,target_load=0.5,"{""network.target_load"": 0.5}",5,0.5,0.5000025,True,True,0.5380092000000001,,True,True,0.05046,True,True,True,True,False,0
+E4,target_load=1.0,"{""network.target_load"": 1.0}",5,0.9999999884296391,0.9736185,False,False,1.0269902,Synth_23;Synth_24;Synth_25;Synth_26;Synth_27;Synth_28;Synth_29;Synth_30,True,True,0.05046,True,True,False,True,False,31388
+E4,target_load=1.1,"{""network.target_load"": 1.1}",5,1.0999999981629636,0.999993,False,False,1.0268353,Synth_21;Synth_23;Synth_24;Synth_25;Synth_26;Synth_27;Synth_28;Synth_29;Synth_30;Synth_31;Synth_32;Synth_33;Synth_34,True,True,0.050464372,True,True,False,True,False,111078
+E4,target_load=0.8,"{""network.target_load"": 0.8}",5,0.8,0.7999995,False,True,0.9634151000000001,,True,True,0.05046,True,True,False,True,False,0
+E4,target_load=0.9,"{""network.target_load"": 0.9}",5,0.8999999309335482,0.894594,False,False,1.0221309467037214,Synth_23;Synth_24;Synth_25;Synth_26,True,True,0.05046,True,True,False,True,False,10872
+E4,target_load=0.3,"{""network.target_load"": 0.3}",5,0.2999999676000648,0.3,True,True,0.3805628,,True,True,0.05046,True,True,True,True,False,0
+E5,"gateway_delay=0.0001,AEB=chassis","{""network.topology.gateway_delay"": 0.0001, ""network.topology.nodes.AEB"": ""chassis""}",5,0.165,0.165,True,True,0.24300000000000038,,True,True,0.050196172,True,True,True,True,False,0
+E5,"gateway_delay=0.0001,AEB=adas","{""network.topology.gateway_delay"": 0.0001, ""network.topology.nodes.AEB"": ""adas""}",5,0.1378,0.1378,True,True,0.24300000000000038,,True,True,0.05075,True,True,True,True,False,0
+E5,"gateway_delay=0.001,AEB=adas","{""network.topology.gateway_delay"": 0.001, ""network.topology.nodes.AEB"": ""adas""}",5,0.1378,0.1378,True,True,0.23150376000000034,,True,True,0.05165,True,True,True,True,False,0
+E5,"gateway_delay=0.001,AEB=chassis","{""network.topology.gateway_delay"": 0.001, ""network.topology.nodes.AEB"": ""chassis""}",5,0.165,0.165,True,True,0.23150376000000034,,True,True,0.050196172,True,True,True,True,False,0
+E5,"gateway_delay=0.0005,AEB=adas","{""network.topology.gateway_delay"": 0.0005, ""network.topology.nodes.AEB"": ""adas""}",5,0.1378,0.1378,True,True,0.21150000000000033,,True,True,0.05115,True,True,True,True,False,0
+E5,"gateway_delay=0.0005,AEB=chassis","{""network.topology.gateway_delay"": 0.0005, ""network.topology.nodes.AEB"": ""chassis""}",5,0.165,0.165,True,True,0.1944000000000003,,True,True,0.050196172,True,True,True,True,False,0
+E7_drop,drop_prob=0.01,"{""sim.faults.0.drop_prob"": 0.01}",5,0.1758,0.17406883333333334,True,True,0.24570000000000036,,True,True,0.05046,True,True,True,True,False,2276
+E7_drop,drop_prob=0.05,"{""sim.faults.0.drop_prob"": 0.05}",5,0.1758,0.167156,True,True,0.24570000000000036,,True,True,0.05046,True,True,True,True,False,11084
+E7_drop,drop_prob=0.1,"{""sim.faults.0.drop_prob"": 0.1}",5,0.1758,0.1584665,True,True,0.24570000000000036,,True,True,0.05046,True,True,True,True,False,22111
+E7_delay,extra_delay=0.01,"{""sim.faults.0.extra_delay"": 0.01}",5,0.1758,0.1757815,True,True,0.24570000000000036,,True,True,0.070196172,True,True,True,True,False,0
+E7_delay,extra_delay=0.005,"{""sim.faults.0.extra_delay"": 0.005}",5,0.1758,0.17579366666666665,True,True,0.24570000000000036,,True,True,0.059750216,True,True,True,True,False,0
+E7_delay,extra_delay=0.001,"{""sim.faults.0.extra_delay"": 0.001}",5,0.1758,0.1758,True,True,0.24570000000000036,,True,True,0.05146,True,True,True,True,False,0
+E7_delay,extra_delay=0.02,"{""sim.faults.0.extra_delay"": 0.02}",5,0.1758,0.175763,True,True,0.24570000000000036,,True,True,0.090196172,False,False,True,True,False,0
+E7_delay,extra_delay=0.002,"{""sim.faults.0.extra_delay"": 0.002}",5,0.1758,0.1758,True,True,0.24570000000000036,,True,True,0.05489,True,True,True,True,False,0
+E7_error,error_prob=0.01,"{""sim.faults.0.error_prob"": 0.01}",5,0.1758,0.1772495,True,True,0.31140000000000045,,True,True,0.05069,True,True,True,True,False,0
+E7_error,error_prob=0.001,"{""sim.faults.0.error_prob"": 0.001}",5,0.1758,0.17597106666666668,True,True,0.28764000000000045,,True,True,0.050468,True,True,True,True,False,0
+E7_error,error_prob=0.2,"{""sim.faults.0.error_prob"": 0.2}",5,0.1758,0.2072698,True,True,0.4377600000000007,,True,True,0.100572,False,False,True,True,True,1916
+E7_error,error_prob=0.15,"{""sim.faults.0.error_prob"": 0.15}",5,0.1758,0.19863506666666667,True,True,0.43614000000000064,,True,True,0.094750216,False,False,True,True,True,761
+E7_error,error_prob=0.12,"{""sim.faults.0.error_prob"": 0.12}",5,0.1758,0.19379573333333333,True,True,0.3859200000000006,,True,True,0.10046,False,False,True,True,True,215
+E7_error,error_prob=0.05,"{""sim.faults.0.error_prob"": 0.05}",5,0.1758,0.183028,True,True,0.3875400000000006,,True,True,0.050894,True,True,True,True,False,0
+E7_error,error_prob=0.1,"{""sim.faults.0.error_prob"": 0.1}",5,0.1758,0.19077496666666666,True,True,0.3934800000000006,,True,True,0.05082,True,True,True,True,False,0

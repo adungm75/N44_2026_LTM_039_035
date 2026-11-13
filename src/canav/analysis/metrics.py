@@ -22,6 +22,7 @@ class MessageInfo:
     deadline: float | None
     wcrt: float | None = None
     to_actuator: bool = False
+    forwarded: bool = False  # gateway copy on another bus
 
 
 def busy_time(starts: np.ndarray, ends: np.ndarray, t: np.ndarray) -> np.ndarray:
@@ -77,7 +78,7 @@ def _stats(x: np.ndarray, prefix: str) -> dict[str, float | None]:
 def compute_metrics(
     frames: pd.DataFrame,
     errors: pd.DataFrame,
-    info: dict[int, MessageInfo],
+    info: dict[tuple[str, int], MessageInfo],
     bitrates: dict[str, int],
     duration_ns: int,
     window_s: float = 0.1,
@@ -87,6 +88,8 @@ def compute_metrics(
 
     ``frames``: sidecar rows; ``errors``: failed attempts (``t_start, t_end, bus, sender,
     tec, state``). Frames still pending at the end of the run are absent from both.
+    ``info`` is keyed by (bus, CAN ID). Message keys are ``0x010``, or ``0x300@bus`` for a
+    gateway copy (same ID on the other bus).
     """
     window_ns = round(window_s * NS)
     ok = frames[frames["outcome"] == "ok"]
@@ -115,15 +118,18 @@ def compute_metrics(
             "error_frames": int(len(er)),
         }
 
-    for can_id, g in frames.groupby("can_id"):
-        mi = info.get(int(can_id))
+    for (can_id, bus_name), g in frames.groupby(["can_id", "bus"]):
+        mi = info.get((str(bus_name), int(can_id)))
         gok = g[g["outcome"] == "ok"].sort_values("t_tx_end")
         r = (gok["t_tx_end"] - gok["t_queued"]).to_numpy(np.float64) / NS
         q = (gok["t_tx_start"] - gok["t_queued"]).to_numpy(np.float64) / NS
         ia = np.diff(gok["t_tx_end"].to_numpy(np.float64)) / NS
         orig = gok["origin_ts"].dropna()
         e2e = (gok.loc[orig.index, "t_tx_end"] - orig).to_numpy(np.float64) / NS
-        expected, received = counter_loss(gok["instance"].to_numpy(np.int64) % COUNTER_MODULO)
+        inst = gok["instance"].to_numpy(np.int64)
+        expected, received = counter_loss(inst % COUNTER_MODULO)
+        # instances missing between the first and last delivered one (exact, no counter wrap)
+        lost_between = int(inst.max() - inst.min() + 1 - len(np.unique(inst))) if len(inst) else 0
         deadline = mi.deadline if mi else None
         n = len(g)
         late = int(np.sum(r > deadline)) if deadline is not None else 0
@@ -144,9 +150,12 @@ def compute_metrics(
             "jitter_std": float(np.std(ia)) if len(ia) else None,
             "jitter_range": float(np.max(ia) - np.min(ia)) if len(ia) else None,
             "loss_counter": (expected - received) / expected if expected else None,
+            "lost_detected": expected - received,  # seen as alive-counter gaps
+            "lost_between": lost_between,
             **_stats(e2e, "e2e"),
         }
-        out["messages"][f"0x{int(can_id):03X}"] = m
+        key = f"0x{int(can_id):03X}" + (f"@{bus_name}" if mi and mi.forwarded else "")
+        out["messages"][key] = m
 
     nodes: dict[str, dict] = {}
     if len(errors):

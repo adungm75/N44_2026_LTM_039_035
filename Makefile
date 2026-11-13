@@ -1,9 +1,9 @@
-.PHONY: setup test lint dbc theory sim-baseline experiments figures demo-2d demo-carla gateway-bench clean-results
+.PHONY: setup test lint dbc theory sim-baseline experiments figures demo-2d demo-carla gateway-bench budget experiments-online clean-results
 
 UV ?= uv
 
-setup:  # carla extra: CARLA client wheel (Linux) + networkx, see pyproject.toml
-	$(UV) sync --extra carla
+setup:  # extras: carla (CARLA client + networkx), parquet (pyarrow: results/summary.parquet)
+	$(UV) sync --extra carla --extra parquet
 
 test:
 	$(UV) run pytest -q
@@ -20,10 +20,21 @@ theory:
 	$(UV) run python -m canav.timing.report --bitrate 500000 --out report/tables/theory_baseline.csv
 
 sim-baseline:
-	$(UV) run python -m canav.experiments.run --config config/experiments/E0_baseline.yaml --engine sim --seeds 1
+	$(UV) run python -m canav.experiments.run --config config/experiments/E0_baseline.yaml --engine sim --seeds 1 --print
 
-experiments:
-	@echo "experiments: not implemented yet (Phase 6)"; exit 1
+JOBS ?= 4
+
+budget:  # AEB chain end-to-end budget (§5.12.1)
+	$(UV) run python -m canav.timing.budget
+
+experiments: budget  # all SimPy experiments (cached), summary, criteria
+	$(UV) run python -m canav.experiments.run --jobs $(JOBS) --config config/experiments/E*.yaml
+	$(UV) run python -m canav.experiments.summary
+	$(UV) run python -m canav.analysis.criteria
+
+experiments-online: budget  # USER: vcan0 up; sim2d E0, E7 drop 5 % / silent at Control
+	$(UV) run python scripts/run_online_experiments.py
+	$(UV) run python -m canav.analysis.criteria
 
 figures:
 	@echo "figures: not implemented yet (Phase 8)"; exit 1

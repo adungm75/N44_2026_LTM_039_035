@@ -1,0 +1,25 @@
+# E5 (P1): two buses joined by the gateway (§5.10): Chassis = sensors, Control, actuators,
+# AEB; ADAS = Perception, Planning, BodyHMI. GNSS on ADAS (chosen: it only feeds Planning).
+# Sweep: gateway forward delay x AEB placement. Verdict (§5.12): forward delay at which the
+# AEB chain misses its budget (the gateway is one more hop of the same budget).
+base: config/experiments/E0_baseline.yaml
+name: E5
+description: 1 bus -> 2 buses via gateway; forward delay x AEB placement, otherwise E0.
+traces: first
+network:
+  topology:
+    buses: {chassis: null, adas: null}   # null = bitrate of the matrix bus
+    gateway_delay: 0.0005
+    nodes:
+      ChassisSensors: chassis
+      Control: chassis
+      SteeringActuator: chassis
+      ThrottleBrakeActuator: chassis
+      AEB: chassis
+      Perception: adas
+      Planning: adas
+      BodyHMI: adas
+      GNSS: adas
+sweep:
+  network.topology.gateway_delay: [0.0001, 0.0005, 0.001]
+  network.topology.nodes.AEB: [chassis, adas]

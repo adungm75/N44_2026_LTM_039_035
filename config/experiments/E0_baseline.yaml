@@ -6,6 +6,11 @@ network:
   matrix: config/network/matrix.yaml
   id_schemes: config/network/id_schemes.yaml
   scheme: safety_first
+  # AEB-chain deadlines (ObjectList_k, AEB_BrakeRequest) from the end-to-end budget (§5.12.1);
+  # every other message keeps D = T.
+  deadlines: config/experiments/aeb_budget.yaml
+
+traces: full               # E0 keeps frames.jsonl for every seed (Phase 7 trains on it)
 
 sim:
   duration: 60.0

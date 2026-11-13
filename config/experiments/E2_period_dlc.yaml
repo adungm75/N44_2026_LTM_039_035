@@ -1,0 +1,10 @@
+# E2 (P0): period factor x0.5/x1/x2 (all periodic messages; D = T scales too, the AEB-chain
+# per-hop budget does not) and DLC 4 vs 8 for every periodic message (frame length only).
+# Verdict (§5.12.3): configurations where the AEB chain misses its deadline.
+base: config/experiments/E0_baseline.yaml
+name: E2
+description: Period factor x DLC, otherwise E0.
+traces: first
+sweep:
+  network.period_factor: [0.5, 1.0, 2.0]
+  network.dlc: [4, 8]

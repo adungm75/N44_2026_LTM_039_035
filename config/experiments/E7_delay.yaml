@@ -1,0 +1,10 @@
+# E7 (P0) faults, part 2: extra delay between release and queueing, all nodes. Values chosen,
+# rationale: from 1/10 of the shortest period (10 ms) up to twice it.
+base: config/experiments/E0_baseline.yaml
+name: E7_delay
+description: Extra queueing delay at every sender.
+traces: first
+sim:
+  faults: [{extra_delay: 0.0}]
+sweep:
+  sim.faults.0.extra_delay: [0.001, 0.002, 0.005, 0.010, 0.020]

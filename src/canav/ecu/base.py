@@ -28,6 +28,9 @@ from canav.sidechannel import UdpLatest
 FAULT_ENV = "CANAV_FAULT"
 
 
+DEFAULT_PERIOD_S = 0.01  # cycle of ECUs without periodic tx (actuators: watchdog tick)
+
+
 @dataclass
 class FaultConfig:
     """Online fault injection: drop frames, delay them, or go silent after some time."""
@@ -137,7 +140,7 @@ class EcuBase:
         if cycles:
             self.period_ns = min(cycles) * 1_000_000
         else:
-            self.period_ns = round(float(self.p.get("period", 0.01)) * 1e9)
+            self.period_ns = round(float(self.p.get("period", DEFAULT_PERIOD_S)) * 1e9)
         self.tx_counter = dict.fromkeys(self.tx_msgs, 0)
         self.rx_counter: dict[str, int] = {}
         self.log = EventLog(log_path, name)

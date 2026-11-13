@@ -55,6 +55,7 @@ class MessageDef:
     e2e: bool
     signals: tuple[SignalDef, ...]
     extended: bool = False
+    forwarded_from: str | None = None  # gateway copy of a message from this bus (multi-bus)
 
     @property
     def is_periodic(self) -> bool:
@@ -66,6 +67,7 @@ class Network:
     nodes: tuple[str, ...]
     buses: dict[str, int]  # bus name -> bitrate [bit/s]
     messages: tuple[MessageDef, ...]
+    gateway_delay: float = 0.0  # [s] store-and-forward delay between buses (multi-bus only)
 
     def message(self, name: str) -> MessageDef:
         for m in self.messages:
@@ -74,7 +76,7 @@ class Network:
         raise KeyError(name)
 
     def by_id(self) -> dict[int, MessageDef]:
-        return {m.can_id: m for m in self.messages}
+        return {m.can_id: m for m in self.messages if m.forwarded_from is None}
 
 
 def _parse_signal(raw: dict[str, Any]) -> SignalDef:

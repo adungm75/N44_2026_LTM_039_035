@@ -1,0 +1,8 @@
+# E1 (P0, §5.10): bitrate sweep. Verdict (§5.12.3): lowest bitrate where every
+# deadline holds (Davis WCRT and simulated max R).
+base: config/experiments/E0_baseline.yaml
+name: E1
+description: Bitrate 125/250/500/1000 kbit/s, otherwise E0.
+traces: first
+sweep:
+  sim.bitrate: [125000, 250000, 500000, 1000000]

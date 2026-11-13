@@ -1,0 +1,21 @@
+# AEB chain end-to-end budget (§5.12.1) -> results/budget/aeb_budget.json
+# (`python -m canav.timing.budget`). Numbers are computed there, not written here.
+ecu_params: config/online/ecu_params.yaml   # AEB.ttc_threshold, AEB.decel_req (a = decel_req, USER)
+matrix: config/network/matrix.yaml
+id_schemes: config/network/id_schemes.yaml
+scheme: safety_first
+sim_config: config/experiments/E0_baseline.yaml   # AEB exec_time (assumption)
+scenario: config/scenarios/sim2d_default.yaml     # bridge tick (dt)
+speeds_kmh: [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]   # advisor: 10-60 km/h, 5 km/h steps
+design_speed_kmh: 60   # chosen, rationale: the AEB chain must keep its budget at the top of the
+                       # speed range it is tested at (advisor's sweep upper bound)
+shares:                # advisor 2026-11-13: split by processing-load weight
+  sensing_decision: 0.6   # Perception + AEB
+  network: 0.2            # CAN hops (and gateway in E5)
+  brake_ecu: 0.2          # ThrottleBrakeActuator
+chain:
+  sensing_messages: [ObjectList_0, ObjectList_1, ObjectList_2, ObjectList_3,
+                     ObjectList_4, ObjectList_5, ObjectList_6, ObjectList_7]
+  aeb_message: AEB_BrakeRequest
+  aeb_node: AEB
+  actuator: ThrottleBrakeActuator
