@@ -267,26 +267,28 @@ class Monitor:
 
 
 def _dashboard_table(mon: Monitor):
+    """Only the last complete window is summarised: redrawing must stay cheap, otherwise it
+    delays the receive loop and inflates the measured latency."""
     from rich.table import Table
 
-    rows = mon.window_rows()
-    last = rows[-2] if len(rows) >= 2 else (rows[-1] if rows else None)
+    keys = sorted(mon.windows)
+    key = keys[-2] if len(keys) >= 2 else (keys[-1] if keys else None)
+    w = mon.windows.get(key) if key is not None else None
     t = Table(title="canav monitor (last complete 1 s window)")
     for col in ("ID", "name", "rate [Hz]", "expected [Hz]"):
         t.add_column(col)
-    key = None if last is None else round(last["t_start_s"] * 1e9) // mon.win_ns
-    ids = mon.windows[key]["ids"] if key in mon.windows else Counter()
+    ids = w["ids"] if w else Counter()
     for cid in sorted(ids):
         m = mon.msgs.get(cid)
         exp = f"{1000 / m.cycle_time:.0f}" if m is not None and m.cycle_time else "-"
         t.add_row(f"0x{cid:03X}", m.name if m else "UNKNOWN", str(ids[cid]), exp)
-    s = mon.summary()
-    lat = s["latency_us"]
+    load = w["bits_worst"] / (mon.win_ns / 1e9) / mon.bitrate * 100 if w else 0.0
+    lat = np.asarray(w["lat"] if w else [], dtype=np.float64) / 1e3
     t.caption = (
-        f"load {0 if last is None else last['load_worst'] * 100:.2f} % (worst) | "
-        f"lat p50 {lat['p50'] or 0:.0f} us p99 {lat['p99'] or 0:.0f} us | "
-        f"UDP lost {s['udp_lost']} | unknown {sum(mon.unknown.values())} | "
-        f"crc {mon.crc_err} counter {mon.counter_err} | diag resp {len(mon.diag_responses)}"
+        f"load {load:.2f} % (worst) | lat p50 {_pct(lat, 50) or 0:.0f} us "
+        f"p99 {_pct(lat, 99) or 0:.0f} us | UDP lost {mon.lost} | "
+        f"unknown {sum(mon.unknown.values())} | crc {mon.crc_err} counter {mon.counter_err} | "
+        f"diag resp {len(mon.diag_responses)}"
     )
     return t
 
