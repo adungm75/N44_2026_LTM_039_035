@@ -1,0 +1,42 @@
+# sim2d scenario (§5.7). SI units; s = arc length along the route [m],
+# lat = lateral offset from the route centre line [m], > 0 = left.
+# All values are scenario PARAMETERS (chosen, not measured).
+dt: 0.01                     # bridge tick [s], paced to real time
+vehicle:                     # "true" vehicle dynamics (kinematic bicycle, rear-axle reference)
+  wheelbase: 2.7
+  max_steer: 0.6             # [rad] at steer = 1
+  a_max: 3.0                 # [m/s^2] at throttle = 1
+  b_max: 8.0                 # [m/s^2] at brake = 1
+  roll_decel: 0.1            # [m/s^2] rolling resistance while moving
+  length: 4.5
+  width: 1.8
+  rear_to_center: 1.35       # rear axle -> body centre; front bumper = 1.35 + 4.5/2 = 3.6 m
+road:                        # L-shaped road: 120 m straight, 90 deg left turn R = 20 m, 80 m straight
+  start: [0.0, 0.0, 0.0]     # x, y, heading
+  step: 0.5
+  segments:
+    - straight: 120.0
+    - arc: {radius: 20.0, angle: 1.5707963267948966}
+    - straight: 80.0
+parked_car:                  # beside the lane (not in the driving path): Planning slows to pass
+  id: 1
+  s: 35.0
+  lat: -2.6
+  length: 4.5
+  width: 1.8
+pedestrian:                  # appears (occluded until then) and crosses right -> left
+  id: 2
+  s: 75.0
+  lat_start: -2.0
+  lat_end: 4.0
+  speed: 1.4                 # [m/s]
+  radius: 0.3
+  trigger_distance: 12.0     # appears when ego front bumper is this far before s (~1.5 s at 8 m/s)
+  start_time: null           # [s] if set, appear at this simulation time instead
+traffic_light:
+  s_stop: 110.0              # stop line
+  visible_range: 60.0
+  schedule:                  # [state, until t_sim]; null = forever
+    - [red, 30.0]
+    - [green, null]
+goal_radius: 2.0             # goal = route end; reached when the rear axle is within this radius

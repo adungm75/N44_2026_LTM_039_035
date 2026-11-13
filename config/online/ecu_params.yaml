@@ -1,0 +1,41 @@
+# Online ECU parameters (§5.5). Calibration values are PARAMETERS (chosen).
+sidechannel:
+  port_base: 47000           # state -> port_base + 1 + node index; ctrl -> port_base + 100
+vehicle:                     # controller's model of the vehicle (calibration)
+  wheelbase: 2.7
+  max_steer: 0.6
+  a_max: 3.0
+  b_max: 8.0
+  front_offset: 3.6          # rear axle -> front bumper
+  track: 1.6
+Perception:
+  range: 50.0                # [m] ahead of the front bumper
+  corridor_half_width: 3.0
+Planning:
+  v_cruise: 8.0              # [m/s]
+  a_comf: 2.0                # comfortable deceleration for stop profiles [m/s^2]
+  a_lat_max: 2.0             # curve speed limit sqrt(a_lat_max / |kappa|)
+  v_pass: 4.0                # speed when passing an object beside the path
+  pass_distance: 20.0
+  path_half_width: 1.5
+  obstacle_stop_gap: 3.0     # stop this far before an in-path object
+  tl_stop_margin: 2.0
+  lead_time: 0.3             # stop profiles use the position predicted this far ahead [s]
+  lookahead: [5.0, 10.0, 15.0]
+Control:
+  ld_gain: 0.8               # pure pursuit look-ahead = clamp(gain * v + ld_min, ld_min, ld_max)
+  ld_min: 4.0
+  ld_max: 15.0
+  kp: 2.5                    # speed PI -> desired acceleration
+  ki: 0.5
+  hold_brake: 0.3            # standstill hold
+  decel_max: 3.0             # comfort limit of the speed loop; harder braking is AEB's job
+AEB:
+  ttc_threshold: 1.5         # [s]
+  path_half_width: 1.5
+  decel_req: 6.0             # [m/s^2]
+SteeringActuator:
+  watchdog_cycles: 3
+ThrottleBrakeActuator:
+  watchdog_cycles: 3
+  safe_brake: 0.2            # light brake in safe state

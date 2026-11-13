@@ -29,7 +29,7 @@ figures:
 	@echo "figures: not implemented yet (Phase 8)"; exit 1
 
 demo-2d:
-	@echo "demo-2d: not implemented yet (Phase 3)"; exit 1
+	$(UV) run python scripts/launch_stack.py --backend sim2d --iface vcan0 --duration 120
 
 demo-carla:
 	@echo "demo-carla: not implemented yet (Phase 4)"; exit 1

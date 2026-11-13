@@ -10,7 +10,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -21,19 +20,7 @@ from canav.analysis.candump import format_line
 from canav.analysis.metrics import compute_metrics
 from canav.experiments.sim import SimConfig, message_info, run_sim, theory
 from canav.netdef import DEFAULT_MATRIX, DEFAULT_SCHEMES, load_network
-
-
-def git_hash() -> str:
-    try:
-        rev = subprocess.run(
-            ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
-        ).stdout.strip()
-        dirty = subprocess.run(
-            ["git", "status", "--porcelain"], capture_output=True, text=True, check=True
-        ).stdout.strip()
-        return rev + ("-dirty" if dirty else "")
-    except (OSError, subprocess.CalledProcessError):
-        return "unknown"
+from canav.provenance import git_hash
 
 
 def resolve(doc: dict, duration: float | None = None) -> dict:

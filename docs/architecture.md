@@ -72,3 +72,58 @@
 - Output mỗi run: `can.log` (`candump -L`, chỉ frame `ok`, interface = tên bus), `frames.jsonl`
   (sidecar §5.4 + `dlc`), `errors.jsonl` (mỗi lần truyền lỗi), `metrics.json`, `config.yaml`
   (cấu hình đã resolve + seed + git hash). `run_id = seed<N>-<hash cấu hình>`.
+
+## Tầng online (Phase 3)
+
+### Tiến trình và kênh
+- 9 ECU (`canav.ecu.nodes`) + bridge (`canav.vehicle.bridge`) + `candump -L` = 11 process trên
+  `vcan0` (`make demo-2d`). Node Gateway của matrix sẽ là gateway raw-socket ở Phase 5 (D5), nên
+  chưa có ECU python-can cho nó.
+- `--iface virtual`: mọi thứ chạy bằng thread trong 1 process (python-can virtual chỉ trong
+  process); dùng cho test. Do GIL, độ trễ/jitter ở chế độ này **không đại diện**; số đo online lấy
+  ở chế độ process trên vcan0.
+- Side channel UDP 127.0.0.1: bridge gửi state tới ChassisSensors, GNSS, Perception, BodyHMI
+  (cổng `port_base + 1 + chỉ số node`); actuator gửi ctrl tới `port_base + 100`. Mỗi actuator chỉ
+  điền trường của mình (`steer` hoặc `throttle/brake`), bridge giữ giá trị mới nhất mỗi tick.
+  `tl` trong state mang thêm `lane_offset`, `lane_heading_err` (dùng cho TrafficLight_Lane).
+- Bridge ghi `route.json` trước; launcher chờ file này rồi mới khởi động ECU (Planning nạp route).
+
+### ECU runtime (`canav.ecu.base`)
+- Một vòng lặp/ECU: chu kỳ = `GenMsgCycleTime` nhỏ nhất của message ECU gửi (actuator: 10 ms
+  watchdog); deadline tuyệt đối `start + k·T` theo `time.monotonic_ns`; nếu trễ quá 1 chu kỳ thì bỏ
+  qua các deadline đã lỡ (đếm `overrun`), không trôi. Giữa các deadline: `bus.recv(timeout)`.
+- Bộ lọc CAN theo các ID mà ECU nhận. Rx: kiểm CRC (sai → `crc_err`, bỏ frame), counter (sai →
+  `counter_err`, vẫn dùng frame). Log JSONL `{t_ns, ecu, event, msg, counter, src?}`;
+  `t_ns = CLOCK_MONOTONIC` (chung cho mọi process → join được). Thống kê cuối: `<ECU>.stats.json`.
+- Actuator ghi `use` (msg `ThrottleBrake` / `Steer_Cmd`, `src` = counter lệnh đã áp dụng, có
+  `AEB_BrakeRequest` khi AEB ghi đè); vào safe state ghi `use` với msg `safe_state`.
+- `FaultConfig`: `--fault ECU:drop_prob=..,extra_delay_ms=..,silent_after_s=..` hoặc env
+  `CANAV_FAULT`. Frame bị drop vẫn tiêu counter (bên nhận phát hiện mất).
+
+### Logic ECU (tham số trong `config/online/ecu_params.yaml`)
+- Hệ tọa độ ego: gốc tại trục sau, x tiến, y trái. `ObjectList.x` = khoảng cách từ cản trước tới
+  mép gần của vật (perception ground truth); hành lang 50 m × ±3 m.
+- Planning: pose = GNSS (100 ms) + dead reckoning bằng WheelSpeed/IMU; 3 điểm nhìn trước 5/10/15 m
+  (hệ ego); vận tốc mục tiêu = min(cruise, giới hạn cong, dừng trước vật trong đường đi, chậm
+  `v_pass` khi vật cạnh đường đi, dừng đèn đỏ/vàng, dừng ở đích). Profile dừng dùng vị trí dự đoán
+  trước `lead_time` để bù độ trễ vòng tốc độ (không có thì xe vượt đèn đỏ ~1 m).
+- Control: Pure Pursuit (look-ahead theo tốc độ) + PI tốc độ → gia tốc mong muốn, giới hạn giảm
+  tốc `decel_max = 3 m/s²` (phanh mạnh hơn là việc của AEB).
+- AEB: vật trong đường đi (|y| < 1.5 m) có TTC < 1.5 s → yêu cầu 6 m/s², giữ tới khi vật không
+  còn tiến lại gần. ThrottleBrakeActuator ghi đè: throttle 0, brake ≥ decel/b_max.
+- Actuator: > 3 chu kỳ không có lệnh hợp lệ → safe state (lái: giữ lệnh cuối; ga/phanh: phanh
+  nhẹ 0.2).
+- BodyHMI: VehicleStatus mode 1 (tự lái), gear 1 (D), odometer tích phân từ state. Diag (P1) chưa làm.
+
+### Kịch bản sim2d (`config/scenarios/sim2d_default.yaml`)
+- Đường chữ L 231.4 m; xe đỗ ở s = 35 m, lệch −2.6 m (cạnh làn, **không chắn** đường đi — nếu chắn
+  hẳn thì không về đích được vì Planning không đổi làn); người đi bộ xuất hiện khi cản trước còn
+  cách điểm băng qua 12 m (≈ 1.5 s ở 8 m/s, như bước ra từ chỗ khuất; tùy chọn `start_time` theo
+  spec); đèn đỏ tới t_sim = 30 s tại vạch s = 110 m.
+- Va chạm: hộp bao của vật chiếu vào hệ ego (xấp xỉ AABB), đủ cho xe/người thẳng hàng với đường.
+
+### Phân tích online (`canav.analysis.online`)
+- Hop latency: mỗi `rx` ghép với `tx` gần nhất trước nó có cùng (msg, counter).
+- e2e: từ `use` của actuator, lần ngược `src` tới thời điểm `tx` của message nguồn (không có `src`)
+  và lấy nguồn mới nhất (max), giống quy tắc `origin_ts` của sim.
+- Tải bus từ `can.log`: worst-case và stuffing thực tế (dựng chuỗi bit từng frame).
