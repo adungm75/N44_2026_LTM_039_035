@@ -29,6 +29,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from canav.analysis.tables import read_table
+
 LOAD_THRESHOLD = 0.50  # CiA "Designing a CAN network" (rule of thumb), level decided by USER
 LOAD_REFERENCE = 0.70  # SAE J1939 / CANopen practice, reported without verdict (USER)
 SRC_LOAD = 'CiA "Designing a CAN network" (rule of thumb; level decided by USER 2026-11-13)'
@@ -341,7 +343,7 @@ def build(
     if online_dir is not None:
         rows += online_rows(online_dir)
     if gateway_csv is not None and gateway_csv.exists():
-        gw = pd.read_csv(gateway_csv)
+        gw = read_table(gateway_csv)
         for r in gw.itertuples():
             add(
                 6,
@@ -353,7 +355,7 @@ def build(
                 "n/a",
             )
     if detector_csv is not None and detector_csv.exists():
-        rows += detector_rows(pd.read_csv(detector_csv))
+        rows += detector_rows(read_table(detector_csv))
     add(
         5,
         "E7 online (P1)",

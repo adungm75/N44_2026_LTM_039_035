@@ -27,7 +27,7 @@ JOBS ?= 4
 budget:  # AEB chain end-to-end budget (§5.12.1)
 	$(UV) run python -m canav.timing.budget
 
-experiments: budget  # all SimPy experiments incl. E8 (cached), summary, E9 detector, criteria
+experiments: theory budget  # all SimPy experiments incl. E8 (cached), summary, E9 detector, criteria
 	$(UV) run python -m canav.experiments.run --jobs $(JOBS) --config config/experiments/E*.yaml
 	$(UV) run python -m canav.experiments.summary
 	$(UV) run python -m canav.analysis.detector
@@ -39,8 +39,9 @@ experiments-online: budget  # USER: vcan0 up; sim2d E0, E7 drop/silent at Contro
 	$(UV) run python -m canav.analysis.detector
 	$(UV) run python -m canav.analysis.criteria
 
-figures:
-	@echo "figures: not implemented yet (Phase 8)"; exit 1
+figures:  # report/figures/*.png + docs/results.md (after make experiments)
+	$(UV) run python -m canav.analysis.figures
+	$(UV) run python -m canav.analysis.results_doc
 
 demo-2d:
 	$(UV) run python scripts/launch_stack.py --backend sim2d --iface vcan0 --duration 120
