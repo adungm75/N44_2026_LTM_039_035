@@ -1,0 +1,43 @@
+# Online ECU parameters for the CARLA backend (Phase 4). Same keys as ecu_params.yaml;
+# vehicle geometry measured from CARLA physics, calibration values are PARAMETERS (chosen).
+sidechannel:
+  port_base: 47000           # state -> port_base + 1 + node index; ctrl -> port_base + 100
+vehicle:                     # controller's model of vehicle.lincoln.mkz_2020
+  wheelbase: 2.86            # measured (wheel positions)
+  max_steer: 1.04            # calibration: max_steer_angle 70 deg x 0.85 (mean FL/FR wheel angle
+                             # measured at 2.5-4.5 m/s; CARLA steering curve + Ackermann)
+  a_max: 3.0                 # calibration (CARLA throttle -> acceleration is not linear)
+  b_max: 5.5                 # calibration: ~5.2-5.6 m/s^2 measured at brake = 1 from 4.3 m/s
+  front_offset: 3.83         # measured: rear axle -> front bumper
+  track: 1.59                # measured
+Perception:
+  range: 50.0                # [m] ahead of the front bumper
+  corridor_half_width: 3.0
+Planning:
+  v_cruise: 8.0              # [m/s]
+  a_comf: 2.0                # comfortable deceleration for stop profiles [m/s^2]
+  a_lat_max: 2.0             # curve speed limit sqrt(a_lat_max / |kappa|)
+  v_pass: 4.0                # speed when passing an object beside the path
+  pass_distance: 20.0
+  path_half_width: 1.5
+  obstacle_stop_gap: 3.0     # stop this far before an in-path object
+  tl_stop_margin: 2.0
+  lead_time: 0.3             # stop profiles use the position predicted this far ahead [s]
+  lookahead: [3.0, 6.0, 9.0]  # Town02 junction turns are tight (route curvature up to ~0.2 1/m)
+Control:
+  ld_gain: 0.6               # pure pursuit look-ahead = clamp(gain * v + ld_min, ld_min, ld_max)
+  ld_min: 3.0
+  ld_max: 15.0
+  kp: 2.5                    # speed PI -> desired acceleration
+  ki: 0.5
+  hold_brake: 0.3            # standstill hold
+  decel_max: 3.0             # comfort limit of the speed loop; harder braking is AEB's job
+AEB:
+  ttc_threshold: 1.5         # [s]
+  path_half_width: 1.5
+  decel_req: 6.0             # [m/s^2]
+SteeringActuator:
+  watchdog_cycles: 3
+ThrottleBrakeActuator:
+  watchdog_cycles: 3
+  safe_brake: 0.2            # light brake in safe state

@@ -33,6 +33,14 @@ from canav.vehicle.bridge import Bridge, make_backend
 DEFAULT_SCENARIO = Path("config/scenarios/sim2d_default.yaml")
 DEFAULT_PARAMS = Path("config/online/ecu_params.yaml")
 DEFAULT_DBC = Path("config/dbc/canav.dbc")
+DEFAULTS = {  # backend -> (scenario, ECU params)
+    "sim2d": (DEFAULT_SCENARIO, DEFAULT_PARAMS),
+    "carla": (
+        Path("config/scenarios/carla_town02.yaml"),
+        Path("config/online/ecu_params_carla.yaml"),
+    ),
+}
+BRIDGE_START_TIMEOUT_S = 120  # CARLA may load the map and spawn actors first
 ONLINE_ECUS = tuple(ECUS)  # Gateway node: raw-socket gateway in Phase 5
 
 
@@ -147,7 +155,7 @@ def _run_processes(out, backend, iface, dbc, duration, faults, stop_on_goal, sto
     children.append(("bridge", bridge))
     t0 = time.monotonic()
     while not (out / "route.json").exists():  # Planning loads the route at start-up
-        if bridge.poll() is not None or time.monotonic() - t0 > 30:
+        if bridge.poll() is not None or time.monotonic() - t0 > BRIDGE_START_TIMEOUT_S:
             raise RuntimeError(f"bridge failed to start, see {proc_dir / 'bridge.log'}")
         time.sleep(0.05)
     for i, name in enumerate(ONLINE_ECUS):

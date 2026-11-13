@@ -18,7 +18,7 @@ import time
 from pathlib import Path
 
 from canav.ecu import FaultConfig
-from canav.experiments.online import DEFAULT_PARAMS, DEFAULT_SCENARIO, run_stack
+from canav.experiments.online import DEFAULTS, run_stack
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -27,13 +27,15 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--iface", default="vcan0", help="SocketCAN interface or 'virtual'")
     p.add_argument("--duration", type=float, default=120.0, help="max simulated seconds")
     p.add_argument("--out", default=None, help="default: results/online/<timestamp>")
-    p.add_argument("--scenario", default=str(DEFAULT_SCENARIO))
-    p.add_argument("--params", default=str(DEFAULT_PARAMS))
+    p.add_argument("--scenario", default=None, help="default: per backend (experiments.online)")
+    p.add_argument("--params", default=None, help="default: per backend (experiments.online)")
     p.add_argument("--fault", action="append", default=[], metavar="ECU:k=v,...")
     p.add_argument("--no-stop-on-goal", action="store_true")
     a = p.parse_args(argv)
 
     out = Path(a.out or f"results/online/{time.strftime('%Y%m%d-%H%M%S')}")
+    scenario = a.scenario or DEFAULTS[a.backend][0]
+    params = a.params or DEFAULTS[a.backend][1]
     faults = {}
     for item in a.fault:
         ecu, _, spec = item.partition(":")
@@ -44,8 +46,8 @@ def main(argv: list[str] | None = None) -> int:
         backend=a.backend,
         iface=a.iface,
         duration=a.duration,
-        scenario=a.scenario,
-        params=a.params,
+        scenario=scenario,
+        params=params,
         faults=faults,
         stop_on_goal=not a.no_stop_on_goal,
     )

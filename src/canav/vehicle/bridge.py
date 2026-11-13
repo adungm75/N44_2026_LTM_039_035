@@ -28,7 +28,11 @@ def make_backend(name: str, scenario: dict) -> VehicleBackend:
         from canav.vehicle.sim2d import Sim2D
 
         return Sim2D(scenario)
-    raise ValueError(f"backend {name!r} not available (carla: Phase 4)")
+    if name == "carla":
+        from canav.vehicle.carla_bridge import CarlaBackend
+
+        return CarlaBackend(scenario)
+    raise ValueError(f"unknown backend {name!r}")
 
 
 class DrivingMetrics:

@@ -31,8 +31,8 @@ figures:
 demo-2d:
 	$(UV) run python scripts/launch_stack.py --backend sim2d --iface vcan0 --duration 120
 
-demo-carla:
-	@echo "demo-carla: not implemented yet (Phase 4)"; exit 1
+demo-carla:  # USER: CARLA server running; carla wheel + networkx in .venv
+	$(UV) run python scripts/launch_stack.py --backend carla --iface vcan0 --duration 300
 
 clean-results:
 	rm -rf results/

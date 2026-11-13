@@ -1,0 +1,32 @@
+# CARLA scenario (§5.7, Phase 4). Town02, synchronous mode, ego driven only by
+# CAN commands. Values are scenario PARAMETERS (chosen) unless marked "measured".
+dt: 0.05                     # fixed_delta_seconds = bridge tick [s] (§5.6), paced to real time
+host: localhost
+port: 2000
+timeout: 60.0                # [s] client RPC timeout
+tm_port: 8000
+carla_root: ~/carla          # PythonAPI/carla/agents (GlobalRoutePlanner); env CARLA_ROOT wins
+map: Town02
+seed: 1                      # NPC choice, Traffic Manager and walker seeds
+ego_blueprint: vehicle.lincoln.mkz_2020
+# Route: spawn 1 -> spawn 46 via GlobalRoutePlanner, ~202 m, left + right turn, two signalized
+# stop lines on the route (found by scanning Town02 spawn pairs, Phase 4).
+start_spawn: 1
+goal_spawn: 46
+route_resolution: 1.0        # [m] waypoint spacing
+goal_radius: 2.0             # goal = route end; reached when the rear axle is within this radius
+tl_visible_range: 60.0       # [m] stop line ahead of the front bumper
+object_range: 60.0           # [m] objects sent to Perception (Perception filters 50 m itself)
+settle_ticks: 10             # ticks after spawning, before walkers start
+npc_vehicles:
+  count: 10
+  min_distance_to_ego: 20.0  # [m] no NPC spawned this close to the ego start
+walkers:
+  count: 8
+  speed: 1.4                 # [m/s]
+  cross_factor: 0.1          # share of walkers that cross roads (CARLA set_pedestrians_cross_factor)
+recorder: null               # file name for client.start_recorder (server side), null = off
+vehicle:                     # measured from the CARLA physics control of the ego (Phase 4)
+  length: 4.892
+  width: 1.837
+  rear_to_center: 1.382      # rear axle -> bounding-box centre

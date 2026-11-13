@@ -127,3 +127,38 @@
 - e2e: từ `use` của actuator, lần ngược `src` tới thời điểm `tx` của message nguồn (không có `src`)
   và lấy nguồn mới nhất (max), giống quy tắc `origin_ts` của sim.
 - Tải bus từ `can.log`: worst-case và stuffing thực tế (dựng chuỗi bit từng frame).
+
+## Backend CARLA (Phase 4, `canav.vehicle.carla_bridge`)
+- Cùng giao thức side channel và cùng 9 ECU như sim2d (ECU không sửa code); chỉ khác file tham số
+  `config/online/ecu_params_carla.yaml` và kịch bản `config/scenarios/carla_town02.yaml`.
+  `make demo-carla` = `launch_stack.py --backend carla --iface vcan0 --duration 300`.
+- CARLA 0.9.16, Town02, synchronous mode, `fixed_delta_seconds = 0.05` (= tick bridge, chạy theo
+  thời gian thực), Traffic Manager sync. Ego `vehicle.lincoln.mkz_2020` không bật autopilot: chỉ
+  lái bằng lệnh từ actuator (CAN → UDP). Khi đóng: xóa mọi actor đã spawn, tắt TM sync, trả server
+  về cài đặt ban đầu (async).
+- Hệ tọa độ: CARLA là hệ tay trái (y sang phải, yaw theo chiều kim đồng hồ, độ; steer > 0 = rẽ
+  phải). Mọi thứ ra khỏi backend đổi về hệ của dự án: `y → −y`, `yaw → −yaw` (rad), `steer → −steer`.
+  Pose gửi đi = trục sau (từ vị trí actor lùi `rear_offset` đo từ vị trí bánh xe).
+- Route: `GlobalRoutePlanner` (PythonAPI agents, cần `networkx`) từ spawn 1 tới spawn 46, 202.1 m,
+  1 rẽ trái + 1 rẽ phải, 2 vạch dừng có đèn. Cặp spawn được chọn bằng cách quét các cặp spawn của
+  Town02 (tuyến 200–300 m, 2–3 đèn, ít nhất 1 lần rẽ).
+- Đèn: các stop waypoint của mọi `traffic.traffic_light` được chiếu lên route (|lệch ngang| ≤ 1.5 m,
+  cùng hướng ±30°); `dist_stop` = s(vạch) − s(cản trước), trạng thái từ `get_state()` của đèn đó.
+  Không dùng `vehicle.get_traffic_light_state()` (§5.7) vì hàm này chỉ báo khi xe đã vào vùng
+  trigger sát giao lộ, quá muộn để dừng với `a_comf` và không cho khoảng cách tới vạch.
+- Vật: mọi xe và người đi bộ (từ `world.get_actors()`) trong 60 m; tâm = tâm bounding box; id CARLA
+  đổi sang id nhỏ 1..255 theo thứ tự xuất hiện (`ObjectList.obj_id` là u8). Va chạm từ cảm biến
+  `sensor.other.collision` (in loại actor bị va vào `proc/bridge.log`).
+- NPC: 10 xe autopilot ở spawn ngẫu nhiên (seed), cách ego ≥ 20 m; 8 người đi bộ có AI controller,
+  `cross_factor` 0.1; spawn người đi bộ thử lại tối đa 5 lần vì điểm ngẫu nhiên hay bị chồng nhau.
+- Hiệu chỉnh cho CARLA (đo bằng script thăm dò, Phase 4): chiều dài cơ sở 2.86 m, track 1.59 m,
+  trục sau → cản trước 3.83 m (đo từ vị trí bánh xe/bounding box). Góc lái: `max_steer_angle` 70°,
+  nhưng góc bánh thực tế ≈ 0.85 × 70° ở 2.5–4.5 m/s (trung bình bánh trái/phải; steering curve +
+  Ackermann) → `max_steer = 1.04 rad`. Phanh 1.0 ≈ 5.2–5.6 m/s² (từ 4.3 m/s) → `b_max = 5.5`.
+  Ga không tuyến tính (0.3 gần như không chạy, 1.0 ≈ 6 m/s² sau ~0.5 s) → để `a_max = 3` và để PI bù.
+- Giao lộ Town02 rất gắt (độ cong route tới ~0.21 1/m): với điểm nhìn trước 5/10/15 m và
+  `ld_min = 4` Pure Pursuit chọn điểm 10 m, cắt góc rồi văng ra 2.2 m, lệch ngang RMS
+  0.79 m, 1 va chạm (lần thử 1). Đổi điểm nhìn trước 3/6/9 m, `ld_gain 0.6`, `ld_min 3` → lệch ngang RMS ≈ 0.25 m.
+- Perception dùng hành lang thẳng theo hệ ego; trong khúc cua, người đi bộ ở phía trong cua có thể
+  lọt vào hành lang và kích hoạt AEB (seed 1: TTC 1.47 s ở 3.9 m/s). Đây là hệ quả của perception
+  đơn giản hóa (D8), chưa sửa.
