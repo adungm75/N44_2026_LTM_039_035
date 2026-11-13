@@ -2,8 +2,8 @@
 
 UV ?= uv
 
-setup:
-	$(UV) sync
+setup:  # carla extra: CARLA client wheel (Linux) + networkx, see pyproject.toml
+	$(UV) sync --extra carla
 
 test:
 	$(UV) run pytest -q
@@ -31,8 +31,8 @@ figures:
 demo-2d:
 	$(UV) run python scripts/launch_stack.py --backend sim2d --iface vcan0 --duration 120
 
-demo-carla:  # USER: CARLA server running; carla wheel + networkx in .venv
-	$(UV) run python scripts/launch_stack.py --backend carla --iface vcan0 --duration 300
+demo-carla:  # USER: CARLA 0.9.16 server running
+	$(UV) run --extra carla python scripts/launch_stack.py --backend carla --iface vcan0 --duration 300
 
 clean-results:
 	rm -rf results/

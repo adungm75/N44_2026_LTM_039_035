@@ -19,6 +19,8 @@ dependencies = [
 viz = ["pygame"]
 parquet = ["pyarrow"]
 ml = ["scikit-learn"]
+# CARLA 0.9.16 client (PyPI, Linux wheels) + networkx for the PythonAPI GlobalRoutePlanner (Phase 4)
+carla = ["carla==0.9.16; sys_platform == 'linux'", "networkx"]
 
 [dependency-groups]
 dev = ["pytest", "ruff"]
