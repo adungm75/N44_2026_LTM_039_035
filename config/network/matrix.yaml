@@ -1,0 +1,200 @@
+# Source of truth for the CAN network (§5.1, decision D7).
+# config/dbc/canav.dbc is generated from this file (`make dbc`); never edit the DBC by hand.
+#
+# Units: SI. period/deadline/jitter in seconds; period null = event-triggered.
+# Signals: Intel byte order (little endian), `start` = LSB bit position.
+# e2e: true -> netdef adds AliveCounter (low nibble of byte dlc-2) and CRC8 (byte dlc-1);
+#   user signals must stay in data bits 0 .. 8*(dlc-2)-1 (8 B: 0-47, 4 B: 0-15).
+# Enumerations (documented in docs/architecture.md):
+#   ObjectList.cls: 0 unknown, 1 car, 2 pedestrian, 3 cyclist, 4 static obstacle
+#   TrafficLight_Lane.tl_state: 0 none/unknown, 1 red, 2 yellow, 3 green
+
+version: 1
+
+buses:
+  main: {bitrate: 500000}
+
+nodes:
+  - ChassisSensors
+  - GNSS
+  - Perception
+  - Planning
+  - Control
+  - AEB
+  - SteeringActuator
+  - ThrottleBrakeActuator
+  - BodyHMI
+  - Gateway
+
+object_signals: &object_signals
+  - {name: valid, start: 0, length: 1}
+  - {name: cls, start: 1, length: 3}
+  - {name: obj_id, start: 4, length: 8}
+  - {name: x, start: 12, length: 16, signed: true, scale: 0.02, unit: m}
+  - {name: y, start: 28, length: 12, signed: true, scale: 0.05, unit: m}
+  - {name: rel_vx, start: 40, length: 8, signed: true, scale: 0.25, unit: m/s}
+
+object_common: &object_common
+  dlc: 8
+  sender: Perception
+  receivers: [AEB, Planning]
+  period: 0.050
+  e2e: true
+  signals: *object_signals
+
+messages:
+  - name: AEB_BrakeRequest
+    id: 0x010
+    dlc: 4
+    sender: AEB
+    receivers: [ThrottleBrakeActuator]
+    period: 0.010
+    e2e: true
+    signals:
+      - {name: active, start: 0, length: 1}
+      - {name: decel_req, start: 1, length: 15, scale: 0.001, unit: m/s^2}
+
+  - name: Steer_Cmd
+    id: 0x100
+    dlc: 4
+    sender: Control
+    receivers: [SteeringActuator]
+    period: 0.010
+    e2e: true
+    signals:
+      - {name: steer, start: 0, length: 16, signed: true, scale: 0.0001, minimum: -1.0, maximum: 1.0}
+
+  - name: ThrottleBrake_Cmd
+    id: 0x101
+    dlc: 4
+    sender: Control
+    receivers: [ThrottleBrakeActuator]
+    period: 0.010
+    e2e: true
+    signals:
+      - {name: throttle, start: 0, length: 8, scale: 0.00392156862745098, minimum: 0.0, maximum: 1.0}
+      - {name: brake, start: 8, length: 8, scale: 0.00392156862745098, minimum: 0.0, maximum: 1.0}
+
+  - name: WheelSpeed
+    id: 0x200
+    dlc: 8
+    sender: ChassisSensors
+    receivers: [Control, Planning]
+    period: 0.010
+    e2e: true
+    signals:
+      - {name: speed, start: 0, length: 16, scale: 0.01, unit: m/s}
+      - {name: v_left, start: 16, length: 16, scale: 0.01, unit: m/s}
+      - {name: v_right, start: 32, length: 16, scale: 0.01, unit: m/s}
+
+  - name: IMU
+    id: 0x201
+    dlc: 8
+    sender: ChassisSensors
+    receivers: [Control, Planning]
+    period: 0.010
+    e2e: true
+    signals:
+      - {name: ax, start: 0, length: 16, signed: true, scale: 0.001, unit: m/s^2}
+      - {name: ay, start: 16, length: 16, signed: true, scale: 0.001, unit: m/s^2}
+      - {name: yaw_rate, start: 32, length: 16, signed: true, scale: 0.0001, unit: rad/s}
+
+  - name: GNSS_Pose
+    id: 0x210
+    dlc: 8
+    sender: GNSS
+    receivers: [Planning]
+    period: 0.100
+    e2e: true
+    signals:
+      - {name: x, start: 0, length: 18, signed: true, scale: 0.1, unit: m}
+      - {name: y, start: 18, length: 18, signed: true, scale: 0.1, unit: m}
+      # 2*pi/4096 rad per LSB
+      - {name: heading, start: 36, length: 12, scale: 0.0015339807878856412, unit: rad}
+
+  - {name: ObjectList_0, id: 0x300, <<: *object_common}
+  - {name: ObjectList_1, id: 0x301, <<: *object_common}
+  - {name: ObjectList_2, id: 0x302, <<: *object_common}
+  - {name: ObjectList_3, id: 0x303, <<: *object_common}
+  - {name: ObjectList_4, id: 0x304, <<: *object_common}
+  - {name: ObjectList_5, id: 0x305, <<: *object_common}
+  - {name: ObjectList_6, id: 0x306, <<: *object_common}
+  - {name: ObjectList_7, id: 0x307, <<: *object_common}
+
+  - name: TrafficLight_Lane
+    id: 0x310
+    dlc: 8
+    sender: Perception
+    receivers: [Planning]
+    period: 0.050
+    e2e: true
+    signals:
+      - {name: tl_state, start: 0, length: 2}
+      - {name: dist_stop, start: 2, length: 12, scale: 0.05, unit: m}
+      - {name: lane_offset, start: 14, length: 12, signed: true, scale: 0.005, unit: m}
+      - {name: lane_heading_err, start: 26, length: 12, signed: true, scale: 0.001, unit: rad}
+
+  - name: TargetPath_0
+    id: 0x400
+    dlc: 8
+    sender: Planning
+    receivers: [Control]
+    period: 0.050
+    e2e: true
+    signals:
+      - {name: target_speed, start: 0, length: 12, scale: 0.01, unit: m/s}
+      - {name: curvature, start: 12, length: 12, signed: true, scale: 0.0001, unit: 1/m}
+      - {name: p1_x, start: 24, length: 12, signed: true, scale: 0.05, unit: m}
+      - {name: p1_y, start: 36, length: 12, signed: true, scale: 0.05, unit: m}
+
+  - name: TargetPath_1
+    id: 0x401
+    dlc: 8
+    sender: Planning
+    receivers: [Control]
+    period: 0.050
+    e2e: true
+    signals:
+      - {name: p2_x, start: 0, length: 12, signed: true, scale: 0.05, unit: m}
+      - {name: p2_y, start: 12, length: 12, signed: true, scale: 0.05, unit: m}
+      - {name: p3_x, start: 24, length: 12, signed: true, scale: 0.05, unit: m}
+      - {name: p3_y, start: 36, length: 12, signed: true, scale: 0.05, unit: m}
+
+  - name: VehicleStatus
+    id: 0x500
+    dlc: 8
+    sender: BodyHMI
+    receivers: [Gateway]
+    period: 0.100
+    e2e: true
+    signals:
+      - {name: mode, start: 0, length: 3}
+      - {name: gear, start: 3, length: 3}
+      - {name: lights, start: 6, length: 4}
+      - {name: odometer, start: 10, length: 24, scale: 0.1, unit: m}
+      - {name: fault_flags, start: 34, length: 8}
+
+  - name: Diag_Request
+    id: 0x7DF
+    dlc: 8
+    sender: Gateway
+    receivers: all
+    period: null
+    e2e: false
+    signals:
+      - {name: target, start: 0, length: 8}
+      - {name: service, start: 8, length: 8}
+      - {name: did, start: 16, length: 16}
+
+  - name: Diag_Response
+    id: 0x7E8
+    dlc: 8
+    sender: BodyHMI
+    receivers: [Gateway]
+    period: null
+    e2e: false
+    signals:
+      - {name: source, start: 0, length: 8}
+      - {name: service, start: 8, length: 8}
+      - {name: did, start: 16, length: 16}
+      - {name: value, start: 32, length: 32}

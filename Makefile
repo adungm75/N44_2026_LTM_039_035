@@ -14,10 +14,10 @@ lint:
 
 # Targets below are implemented in later phases (see §6).
 dbc:
-	@echo "dbc: not implemented yet (Phase 1)"; exit 1
+	$(UV) run python -m canav.netdef.dbc --out config/dbc/canav.dbc
 
 theory:
-	@echo "theory: not implemented yet (Phase 1)"; exit 1
+	$(UV) run python -m canav.timing.report --bitrate 500000 --out report/tables/theory_baseline.csv
 
 sim-baseline:
 	@echo "sim-baseline: not implemented yet (Phase 2)"; exit 1

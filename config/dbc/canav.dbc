@@ -1,0 +1,228 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: ChassisSensors GNSS Perception Planning Control AEB SteeringActuator ThrottleBrakeActuator BodyHMI Gateway
+
+
+BO_ 16 AEB_BrakeRequest: 4 AEB
+ SG_ CRC8 : 24|8@1+ (1,0) [0|0] ""  ThrottleBrakeActuator
+ SG_ AliveCounter : 16|4@1+ (1,0) [0|0] ""  ThrottleBrakeActuator
+ SG_ decel_req : 1|15@1+ (0.001,0.0) [0|0] "m/s^2"  ThrottleBrakeActuator
+ SG_ active : 0|1@1+ (1,0) [0|0] ""  ThrottleBrakeActuator
+
+BO_ 256 Steer_Cmd: 4 Control
+ SG_ CRC8 : 24|8@1+ (1,0) [0|0] ""  SteeringActuator
+ SG_ AliveCounter : 16|4@1+ (1,0) [0|0] ""  SteeringActuator
+ SG_ steer : 0|16@1- (0.0001,0.0) [-1.0|1.0] ""  SteeringActuator
+
+BO_ 257 ThrottleBrake_Cmd: 4 Control
+ SG_ CRC8 : 24|8@1+ (1,0) [0|0] ""  ThrottleBrakeActuator
+ SG_ AliveCounter : 16|4@1+ (1,0) [0|0] ""  ThrottleBrakeActuator
+ SG_ brake : 8|8@1+ (0.00392156862745098,0.0) [0.0|1.0] ""  ThrottleBrakeActuator
+ SG_ throttle : 0|8@1+ (0.00392156862745098,0.0) [0.0|1.0] ""  ThrottleBrakeActuator
+
+BO_ 512 WheelSpeed: 8 ChassisSensors
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Control,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Control,Planning
+ SG_ v_right : 32|16@1+ (0.01,0.0) [0|0] "m/s"  Control,Planning
+ SG_ v_left : 16|16@1+ (0.01,0.0) [0|0] "m/s"  Control,Planning
+ SG_ speed : 0|16@1+ (0.01,0.0) [0|0] "m/s"  Control,Planning
+
+BO_ 513 IMU: 8 ChassisSensors
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Control,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Control,Planning
+ SG_ yaw_rate : 32|16@1- (0.0001,0.0) [0|0] "rad/s"  Control,Planning
+ SG_ ay : 16|16@1- (0.001,0.0) [0|0] "m/s^2"  Control,Planning
+ SG_ ax : 0|16@1- (0.001,0.0) [0|0] "m/s^2"  Control,Planning
+
+BO_ 528 GNSS_Pose: 8 GNSS
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Planning
+ SG_ heading : 36|12@1+ (0.0015339807878856412,0.0) [0|0] "rad"  Planning
+ SG_ y : 18|18@1- (0.1,0.0) [0|0] "m"  Planning
+ SG_ x : 0|18@1- (0.1,0.0) [0|0] "m"  Planning
+
+BO_ 768 ObjectList_0: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 769 ObjectList_1: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 770 ObjectList_2: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 771 ObjectList_3: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 772 ObjectList_4: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 773 ObjectList_5: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 774 ObjectList_6: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 775 ObjectList_7: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ rel_vx : 40|8@1- (0.25,0.0) [0|0] "m/s"  AEB,Planning
+ SG_ y : 28|12@1- (0.05,0.0) [0|0] "m"  AEB,Planning
+ SG_ x : 12|16@1- (0.02,0.0) [0|0] "m"  AEB,Planning
+ SG_ obj_id : 4|8@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ cls : 1|3@1+ (1,0) [0|0] ""  AEB,Planning
+ SG_ valid : 0|1@1+ (1,0) [0|0] ""  AEB,Planning
+
+BO_ 784 TrafficLight_Lane: 8 Perception
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Planning
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Planning
+ SG_ lane_heading_err : 26|12@1- (0.001,0.0) [0|0] "rad"  Planning
+ SG_ lane_offset : 14|12@1- (0.005,0.0) [0|0] "m"  Planning
+ SG_ dist_stop : 2|12@1+ (0.05,0.0) [0|0] "m"  Planning
+ SG_ tl_state : 0|2@1+ (1,0) [0|0] ""  Planning
+
+BO_ 1024 TargetPath_0: 8 Planning
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Control
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Control
+ SG_ p1_y : 36|12@1- (0.05,0.0) [0|0] "m"  Control
+ SG_ p1_x : 24|12@1- (0.05,0.0) [0|0] "m"  Control
+ SG_ curvature : 12|12@1- (0.0001,0.0) [0|0] "1/m"  Control
+ SG_ target_speed : 0|12@1+ (0.01,0.0) [0|0] "m/s"  Control
+
+BO_ 1025 TargetPath_1: 8 Planning
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Control
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Control
+ SG_ p3_y : 36|12@1- (0.05,0.0) [0|0] "m"  Control
+ SG_ p3_x : 24|12@1- (0.05,0.0) [0|0] "m"  Control
+ SG_ p2_y : 12|12@1- (0.05,0.0) [0|0] "m"  Control
+ SG_ p2_x : 0|12@1- (0.05,0.0) [0|0] "m"  Control
+
+BO_ 1280 VehicleStatus: 8 BodyHMI
+ SG_ CRC8 : 56|8@1+ (1,0) [0|0] ""  Gateway
+ SG_ AliveCounter : 48|4@1+ (1,0) [0|0] ""  Gateway
+ SG_ fault_flags : 34|8@1+ (1,0) [0|0] ""  Gateway
+ SG_ odometer : 10|24@1+ (0.1,0.0) [0|0] "m"  Gateway
+ SG_ lights : 6|4@1+ (1,0) [0|0] ""  Gateway
+ SG_ gear : 3|3@1+ (1,0) [0|0] ""  Gateway
+ SG_ mode : 0|3@1+ (1,0) [0|0] ""  Gateway
+
+BO_ 2015 Diag_Request: 8 Gateway
+ SG_ did : 16|16@1+ (1,0) [0|0] ""  ChassisSensors,GNSS,Perception,Planning,Control,AEB,SteeringActuator,ThrottleBrakeActuator,BodyHMI
+ SG_ service : 8|8@1+ (1,0) [0|0] ""  ChassisSensors,GNSS,Perception,Planning,Control,AEB,SteeringActuator,ThrottleBrakeActuator,BodyHMI
+ SG_ target : 0|8@1+ (1,0) [0|0] ""  ChassisSensors,GNSS,Perception,Planning,Control,AEB,SteeringActuator,ThrottleBrakeActuator,BodyHMI
+
+BO_ 2024 Diag_Response: 8 BodyHMI
+ SG_ value : 32|32@1+ (1,0) [0|0] ""  Gateway
+ SG_ did : 16|16@1+ (1,0) [0|0] ""  Gateway
+ SG_ service : 8|8@1+ (1,0) [0|0] ""  Gateway
+ SG_ source : 0|8@1+ (1,0) [0|0] ""  Gateway
+
+
+
+
+
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_ "GenMsgCycleTime" BO_ 16 10;
+BA_ "GenMsgCycleTime" BO_ 256 10;
+BA_ "GenMsgCycleTime" BO_ 257 10;
+BA_ "GenMsgCycleTime" BO_ 512 10;
+BA_ "GenMsgCycleTime" BO_ 513 10;
+BA_ "GenMsgCycleTime" BO_ 528 100;
+BA_ "GenMsgCycleTime" BO_ 768 50;
+BA_ "GenMsgCycleTime" BO_ 769 50;
+BA_ "GenMsgCycleTime" BO_ 770 50;
+BA_ "GenMsgCycleTime" BO_ 771 50;
+BA_ "GenMsgCycleTime" BO_ 772 50;
+BA_ "GenMsgCycleTime" BO_ 773 50;
+BA_ "GenMsgCycleTime" BO_ 774 50;
+BA_ "GenMsgCycleTime" BO_ 775 50;
+BA_ "GenMsgCycleTime" BO_ 784 50;
+BA_ "GenMsgCycleTime" BO_ 1024 50;
+BA_ "GenMsgCycleTime" BO_ 1025 50;
+BA_ "GenMsgCycleTime" BO_ 1280 100;
+
+
+
+

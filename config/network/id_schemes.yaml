@@ -1,0 +1,29 @@
+# CAN ID assignment schemes (§5.10 E3).
+# Each scheme maps message name -> CAN ID; messages not listed keep their matrix.yaml ID.
+
+schemes:
+  # IDs exactly as in matrix.yaml: safety-critical commands get the lowest IDs.
+  safety_first: {}
+
+  # By node order (matrix.yaml `nodes`): the k-th transmitting node gets base 0x100*(k+1),
+  # its messages are numbered in matrix order. AEB (6th transmitter) lands at 0x600.
+  # Diagnostic IDs (0x7DF / 0x7E8) are standardised and unchanged.
+  naive:
+    WheelSpeed: 0x100
+    IMU: 0x101
+    GNSS_Pose: 0x200
+    ObjectList_0: 0x300
+    ObjectList_1: 0x301
+    ObjectList_2: 0x302
+    ObjectList_3: 0x303
+    ObjectList_4: 0x304
+    ObjectList_5: 0x305
+    ObjectList_6: 0x306
+    ObjectList_7: 0x307
+    TrafficLight_Lane: 0x308
+    TargetPath_0: 0x400
+    TargetPath_1: 0x401
+    Steer_Cmd: 0x500
+    ThrottleBrake_Cmd: 0x501
+    AEB_BrakeRequest: 0x600
+    VehicleStatus: 0x700
