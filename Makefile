@@ -27,13 +27,16 @@ JOBS ?= 4
 budget:  # AEB chain end-to-end budget (§5.12.1)
 	$(UV) run python -m canav.timing.budget
 
-experiments: budget  # all SimPy experiments (cached), summary, criteria
+experiments: budget  # all SimPy experiments incl. E8 (cached), summary, E9 detector, criteria
 	$(UV) run python -m canav.experiments.run --jobs $(JOBS) --config config/experiments/E*.yaml
 	$(UV) run python -m canav.experiments.summary
+	$(UV) run python -m canav.analysis.detector
 	$(UV) run python -m canav.analysis.criteria
 
-experiments-online: budget  # USER: vcan0 up; sim2d E0, E7 drop 5 % / silent at Control
+experiments-online: budget  # USER: vcan0 up; sim2d E0, E7 drop/silent at Control, E8 anomalies
 	$(UV) run python scripts/run_online_experiments.py
+	$(UV) run python scripts/run_e8_online.py
+	$(UV) run python -m canav.analysis.detector
 	$(UV) run python -m canav.analysis.criteria
 
 figures:

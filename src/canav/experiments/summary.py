@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pandas as pd
 
-EXPERIMENTS = ("E0", "E1", "E2", "E3", "E4", "E5", "E7_drop", "E7_delay", "E7_error")
+EXPERIMENTS = ("E0", "E1", "E2", "E3", "E4", "E5", "E7_drop", "E7_delay", "E7_error", "E8")
 
 
 def label(params: dict) -> str:

@@ -118,6 +118,7 @@ def build(
     budget: dict,
     online_dir: Path | None = None,
     gateway_csv: Path | None = None,
+    detector_csv: Path | None = None,
 ) -> tuple[list[dict], pd.DataFrame]:
     d = budget["design"]
     chain = set(d["deadlines_s"])
@@ -351,6 +352,8 @@ def build(
                 "§5.12.6: no threshold",
                 "n/a",
             )
+    if detector_csv is not None and detector_csv.exists():
+        rows += detector_rows(pd.read_csv(detector_csv))
     add(
         5,
         "E7 online (P1)",
@@ -361,6 +364,75 @@ def build(
         "n/a (P1, not run in Phase 6)",
     )
     return rows, v
+
+
+DETECTOR_K = 3  # chosen for the summary rows: middle of the k sweep (classic 3 sigma)
+
+
+def detector_rows(ev: pd.DataFrame) -> list[dict]:
+    """§5.12.4 (spoofing detected by the E2E counter, R5) and §5.12.7 (detector, no threshold)."""
+    rows = []
+
+    def add(crit, exp, item, measured, threshold, source, verdict):
+        rows.append(
+            dict(
+                criterion=crit,
+                experiment=exp,
+                item=item,
+                measured=measured,
+                threshold=threshold,
+                threshold_source=source,
+                verdict=verdict,
+            )
+        )
+
+    for ds, g in ev.groupby("dataset"):
+        exp = f"E8/E9 {ds}"
+        sp = g[(g["anomaly"] == "spoof") & (g["k"] == DETECTOR_K)]
+        if len(sp):
+            r5 = float(sp["tpr_R5"].iloc[0])
+            add(
+                4,
+                exp,
+                "spoofed Steer_Cmd windows with E2E counter errors (R5)",
+                f"{r5:.3f} of {int(sp['windows'].iloc[0])} windows",
+                "1.0 (every window)",
+                "§5.12.4: every injected fault detected",
+                "pass" if r5 >= 1.0 else "fail",
+            )
+        gk = g[g["k"] == DETECTOR_K]
+        for r in gk[gk["anomaly"] != "all"].itertuples():
+            add(
+                7,
+                exp,
+                f"TPR {r.anomaly} (k = {DETECTOR_K})",
+                f"{r.tpr:.4f} ({r.windows} windows), delay mean {r.delay_mean_s:.3f} s / "
+                f"max {r.delay_max_s:.3f} s, missed {int(r.missed)}/{int(r.occurrences)}",
+                "none",
+                "§5.12.7: no threshold",
+                "n/a",
+            )
+        al = gk[gk["anomaly"] == "all"].iloc[0]
+        add(
+            7,
+            exp,
+            f"global FPR (k = {DETECTOR_K})",
+            f"{al.fpr:.5f} ({int(al.normal_windows)} normal windows)",
+            "none",
+            "§5.12.7: no threshold",
+            "n/a",
+        )
+        roc = g[g["anomaly"] == "all"].sort_values("k")
+        add(
+            7,
+            exp,
+            "ROC over k (FPR, TPR)",
+            "; ".join(f"k={int(r.k)}: ({r.fpr:.5f}, {r.tpr:.4f})" for r in roc.itertuples()),
+            "none",
+            "§5.12.7: no threshold",
+            "n/a",
+        )
+    return rows
 
 
 def online_rows(root: Path) -> list[dict]:
@@ -466,8 +538,13 @@ def main(argv: list[str] | None = None) -> int:
     res = Path(a.results)
     summary = pd.read_parquet(res / "summary.parquet")
     budget = json.loads((res / "budget" / "aeb_budget.json").read_text())
+    tables = Path(a.tables)
     rows, variants = build(
-        summary, budget, res / "online_exp", Path(a.tables) / "gateway_latency.csv"
+        summary,
+        budget,
+        res / "online_exp",
+        tables / "gateway_latency.csv",
+        tables / "detector_eval.csv",
     )
     out = Path(a.tables)
     out.mkdir(parents=True, exist_ok=True)

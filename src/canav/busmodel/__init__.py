@@ -547,6 +547,55 @@ class PeriodicTask:
             k += 1
 
 
+class InjectTask:
+    """Anomaly / attacker source (E8): sends ``payload(k)`` as ``can_id`` every ``period_ns`` in
+    ``[start_ns, end_ns)``; every frame carries ``label`` in the sidecar (ground truth)."""
+
+    def __init__(
+        self,
+        env: simpy.Environment,
+        node: Node,
+        can_id: int,
+        name: str,
+        payload: Callable[[int], bytes],
+        period_ns: int,
+        start_ns: int,
+        end_ns: int,
+        label: str,
+        extended: bool = False,
+    ):
+        if node.bus is None:
+            raise RuntimeError(f"node {node.name} is not attached to a bus")
+        self.env = env
+        self.node = node
+        self.can_id, self.name, self.payload = can_id, name, payload
+        self.period_ns, self.start_ns, self.end_ns = period_ns, start_ns, end_ns
+        self.label, self.extended = label, extended
+        self.process = env.process(self._run())
+
+    def _run(self):
+        k = 0
+        while True:
+            t = self.start_ns + k * self.period_ns
+            if t >= self.end_ns:
+                return
+            if t > self.env.now:
+                yield self.env.timeout(t - self.env.now)
+            f = Frame(
+                can_id=self.can_id,
+                name=self.name,
+                sender=self.node.name,
+                instance=k,
+                data=self.payload(k),
+                t_release=t,
+                origin_ts=t,
+                label=self.label,
+                extended=self.extended,
+            )
+            self.node.send(f)
+            k += 1
+
+
 __all__ = [
     "Bus",
     "ErrorEvent",
@@ -554,6 +603,7 @@ __all__ = [
     "FaultRule",
     "Frame",
     "Gateway",
+    "InjectTask",
     "MessageSpec",
     "Node",
     "OUTCOMES",

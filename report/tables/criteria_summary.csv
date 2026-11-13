@@ -27,4 +27,18 @@ criterion,experiment,item,measured,threshold,threshold_source,verdict
 6,Phase 5 gateway,"batch 8, flush 5.0 ms","p50 2967 us, p99 6426 us, UDP lost 0",none,§5.12.6: no threshold,n/a
 6,Phase 5 gateway,"batch 32, flush 1.0 ms","p50 1419 us, p99 2205 us, UDP lost 0",none,§5.12.6: no threshold,n/a
 6,Phase 5 gateway,"batch 32, flush 5.0 ms","p50 3704 us, p99 6390 us, UDP lost 0",none,§5.12.6: no threshold,n/a
+4,E8/E9 online,spoofed Steer_Cmd windows with E2E counter errors (R5),1.000 of 101 windows,1.0 (every window),§5.12.4: every injected fault detected,pass
+7,E8/E9 online,TPR flood (k = 3),"1.0000 (101 windows), delay mean 0.061 s / max 0.061 s, missed 0/1",none,§5.12.7: no threshold,n/a
+7,E8/E9 online,TPR silent (k = 3),"1.0000 (247 windows), delay mean 0.054 s / max 0.054 s, missed 0/1",none,§5.12.7: no threshold,n/a
+7,E8/E9 online,TPR spoof (k = 3),"1.0000 (101 windows), delay mean 0.052 s / max 0.052 s, missed 0/1",none,§5.12.7: no threshold,n/a
+7,E8/E9 online,TPR unknown_id (k = 3),"0.9901 (101 windows), delay mean 0.056 s / max 0.056 s, missed 0/1",none,§5.12.7: no threshold,n/a
+7,E8/E9 online,global FPR (k = 3),0.00000 (1118 normal windows),none,§5.12.7: no threshold,n/a
+7,E8/E9 online,"ROC over k (FPR, TPR)","k=2: (0.00268, 0.9982); k=3: (0.00000, 0.9982); k=4: (0.00000, 0.9964); k=5: (0.00000, 0.9964)",none,§5.12.7: no threshold,n/a
+4,E8/E9 sim,spoofed Steer_Cmd windows with E2E counter errors (R5),1.000 of 200 windows,1.0 (every window),§5.12.4: every injected fault detected,pass
+7,E8/E9 sim,TPR flood (k = 3),"1.0000 (200 windows), delay mean 0.100 s / max 0.100 s, missed 0/2",none,§5.12.7: no threshold,n/a
+7,E8/E9 sim,TPR silent (k = 3),"1.0000 (200 windows), delay mean 0.100 s / max 0.100 s, missed 0/2",none,§5.12.7: no threshold,n/a
+7,E8/E9 sim,TPR spoof (k = 3),"1.0000 (200 windows), delay mean 0.100 s / max 0.100 s, missed 0/2",none,§5.12.7: no threshold,n/a
+7,E8/E9 sim,TPR unknown_id (k = 3),"1.0000 (200 windows), delay mean 0.100 s / max 0.100 s, missed 0/2",none,§5.12.7: no threshold,n/a
+7,E8/E9 sim,global FPR (k = 3),0.00098 (5100 normal windows),none,§5.12.7: no threshold,n/a
+7,E8/E9 sim,"ROC over k (FPR, TPR)","k=2: (0.00098, 1.0000); k=3: (0.00098, 1.0000); k=4: (0.00098, 0.9988); k=5: (0.00098, 0.9988)",none,§5.12.7: no threshold,n/a
 5,E7 online (P1),maximum avoidance speed vs drop/delay at Control/AEB,not run,-,§5.12.5,"n/a (P1, not run in Phase 6)"

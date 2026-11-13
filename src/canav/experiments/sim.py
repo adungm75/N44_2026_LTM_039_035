@@ -25,6 +25,7 @@ from canav.busmodel import (
     SimLogger,
     s_to_ns,
 )
+from canav.experiments import anomalies
 from canav.netdef import Network
 from canav.timing import WcrtResult, bus_load_theory, davis_wcrt, timing_messages
 
@@ -51,6 +52,7 @@ class SimConfig:
     tasks: dict[str, dict] = field(default_factory=dict)  # node -> {exec_time: s}
     actuators: list[str] = field(default_factory=list)
     faults: list[dict] = field(default_factory=list)
+    anomalies: list[dict] = field(default_factory=list)  # E8, see canav.experiments.anomalies
 
     @classmethod
     def from_dict(cls, d: dict | None) -> SimConfig:
@@ -158,6 +160,9 @@ def run_sim(net: Network, cfg: SimConfig, seed: int) -> SimResult:
     env = simpy.Environment()
     logger = SimLogger()
     faults = FaultInjector.from_config(cfg.faults, rng) if cfg.faults else None
+    silent = anomalies.silent_rules(cfg.anomalies)
+    if silent:
+        faults = FaultInjector((faults.rules if faults else ()) + tuple(silent), rng)
     rates = bitrates(net, cfg)
     buses = {
         name: Bus(
@@ -218,6 +223,9 @@ def run_sim(net: Network, cfg: SimConfig, seed: int) -> SimResult:
                 faults=faults,
                 rng=rng,
             )
+
+    if cfg.anomalies:
+        anomalies.install(env, next(iter(buses.values())), cfg.anomalies)
 
     duration_ns = s_to_ns(cfg.duration)
     env.run(until=duration_ns)

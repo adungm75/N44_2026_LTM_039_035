@@ -1,0 +1,12 @@
+# E8 (P0, §5.10): labelled anomalies in the SimPy model, one anomaly per run in
+# [20, 30) s (chosen), test seeds 4 and 5 (E9 trains on E0 seeds 1-3). Defaults and threat
+# model: canav.experiments.anomalies, docs/experiments.md.
+base: config/experiments/E0_baseline.yaml
+name: E8
+description: E0 + one labelled anomaly (flood / silent / spoof / unknown ID) in [20, 30) s.
+traces: full
+sim:
+  seeds: [4, 5]
+  anomalies: [{type: flood, start: 20.0, end: 30.0}]
+sweep:
+  sim.anomalies.0.type: [flood, silent, spoof, unknown_id]
