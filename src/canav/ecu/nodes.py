@@ -369,14 +369,39 @@ class ThrottleBrakeActuator(_Actuator):
 
 
 class BodyHMI(EcuBase):
-    """VehicleStatus every 100 ms (mode 1 = autonomous, gear 1 = D); odometer from state."""
+    """VehicleStatus every 100 ms (mode 1 = autonomous, gear 1 = D); odometer from state.
+
+    Diagnostics (P1): ``Diag_Request`` with ``target`` = this node's index in the DBC node list
+    or 0xFF (all), service 0x22 (ReadDataByIdentifier) -> ``Diag_Response`` service 0x62 with
+    DID 0x0001 = odometer [0.1 m], 0x0002 = mode; otherwise negative response service 0x7F,
+    value = NRC (0x11 service not supported, 0x31 request out of range).
+    """
 
     uses_state = True
+    DIDS = {0x0001: "odometer", 0x0002: "mode"}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.odometer = 0.0
         self.t_sim: float | None = None
+        self.node_index = [n.name for n in self.db.nodes].index(self.name)
+
+    def on_rx(self, msg: str, values: dict, counter: int | None, t_ns: int) -> None:
+        if msg != "Diag_Request" or int(values["target"]) not in (self.node_index, 0xFF):
+            return
+        service, did = int(values["service"]), int(values["did"])
+        if service != 0x22:
+            resp, value = 0x7F, 0x11
+        elif did not in self.DIDS:
+            resp, value = 0x7F, 0x31
+        else:
+            resp = 0x62
+            value = round(self.odometer * 10) if did == 0x0001 else 1
+        self.send(
+            "Diag_Response",
+            {"source": self.node_index, "service": resp, "did": did, "value": value},
+            {"Diag_Request": counter},
+        )
 
     def cycle(self, t_ns: int) -> None:
         st = self.state()

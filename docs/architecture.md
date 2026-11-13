@@ -113,7 +113,10 @@
   còn tiến lại gần. ThrottleBrakeActuator ghi đè: throttle 0, brake ≥ decel/b_max.
 - Actuator: > 3 chu kỳ không có lệnh hợp lệ → safe state (lái: giữ lệnh cuối; ga/phanh: phanh
   nhẹ 0.2).
-- BodyHMI: VehicleStatus mode 1 (tự lái), gear 1 (D), odometer tích phân từ state. Diag (P1) chưa làm.
+- BodyHMI: VehicleStatus mode 1 (tự lái), gear 1 (D), odometer tích phân từ state. Diag (P1, Phase 5):
+  `Diag_Request` có `target` = 8 (chỉ số BodyHMI trong danh sách node DBC) hoặc 0xFF, service 0x22
+  → `Diag_Response` service 0x62, DID 0x0001 = odometer [0.1 m], 0x0002 = mode; service khác →
+  0x7F với value = NRC 0x11, DID lạ → 0x7F với NRC 0x31.
 
 ### Kịch bản sim2d (`config/scenarios/sim2d_default.yaml`)
 - Đường chữ L 231.4 m; xe đỗ ở s = 35 m, lệch −2.6 m (cạnh làn, **không chắn** đường đi — nếu chắn
@@ -162,3 +165,14 @@
 - Perception dùng hành lang thẳng theo hệ ego; trong khúc cua, người đi bộ ở phía trong cua có thể
   lọt vào hành lang và kích hoạt AEB (seed 1: TTC 1.47 s ở 3.9 m/s). Đây là hệ quả của perception
   đơn giản hóa (D8), chưa sửa.
+
+## Gateway và monitor (Phase 5)
+- Giao thức, phương pháp đo: `docs/gateway_protocol.md`.
+- Trong `launch_stack.py` chế độ process, node Gateway = tiến trình `canav.gateway` (raw socket,
+  không python-can, D5) với `config/online/gateway.yaml`; `--no-gateway` để bỏ. `--monitor` chạy
+  thêm `canav.monitor` ghi vào `<out>/monitor`. Chế độ `virtual` không có gateway (raw socket cần
+  interface thật).
+- Số tiến trình: 9 ECU + bridge + gateway + candump = 12 (giới hạn §1); thêm monitor là 13
+  (tùy chọn, công cụ đo chứ không phải node của mạng).
+- `EcuBase.tx_msgs` nay gồm cả message sự kiện (Diag_Response) để ECU gửi được; chu kỳ ECU vẫn lấy
+  từ message định kỳ.

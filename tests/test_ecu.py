@@ -1,5 +1,6 @@
 import json
 import threading
+import time
 import uuid
 from pathlib import Path
 
@@ -11,7 +12,7 @@ import yaml
 
 from canav import e2e
 from canav.analysis.online import OriginResolver, hop_latency
-from canav.ecu import EcuBase, FaultConfig, load_dbc, make_bus
+from canav.ecu import EcuBase, FaultConfig, build_ecu, load_dbc, make_bus
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -186,3 +187,31 @@ def test_hop_latency_and_e2e_chain():
     e2e_df = OriginResolver(ev).e2e(ev[ev["event"] == "use"])
     # freshest origin among the chain inputs = WheelSpeed #5 at t=2000
     assert e2e_df["e2e_s"].tolist() == [pytest.approx(1800e-9)]
+
+
+def test_bodyhmi_answers_diag(tmp_path, db, params):
+    ch = uuid.uuid4().hex
+    hmi = build_ecu("BodyHMI", "virtual", db, params, tmp_path, channel=ch)
+    hmi.odometer = 12.34
+    inject = make_bus("virtual", ch)
+    req = db.get_message_by_name("Diag_Request")
+    stop = threading.Event()
+    th = threading.Thread(target=hmi.run, args=(stop, 0.5))
+    th.start()
+    for target, service, did in ((8, 0x22, 1), (8, 0x22, 9), (8, 0x10, 1), (3, 0x22, 1)):
+        data = req.encode({"target": target, "service": service, "did": did})
+        inject.send(can.Message(arbitration_id=req.frame_id, data=data, is_extended_id=False))
+    got = []
+    t_end = time.monotonic() + 1.0
+    while time.monotonic() < t_end and len(got) < 3:
+        m = inject.recv(timeout=0.1)
+        if m is not None and m.arbitration_id == 0x7E8:
+            got.append(db.decode_message(0x7E8, m.data))
+    th.join(timeout=2)
+    inject.shutdown()
+    hmi.bus.shutdown()
+    assert [(g["source"], g["service"], g["did"], g["value"]) for g in got] == [
+        (8, 0x62, 1, 123),  # odometer in 0.1 m
+        (8, 0x7F, 9, 0x31),  # unknown DID
+        (8, 0x7F, 1, 0x11),  # unsupported service; target 3 is not BodyHMI: no reply
+    ]

@@ -1,4 +1,4 @@
-.PHONY: setup test lint dbc theory sim-baseline experiments figures demo-2d demo-carla clean-results
+.PHONY: setup test lint dbc theory sim-baseline experiments figures demo-2d demo-carla gateway-bench clean-results
 
 UV ?= uv
 
@@ -33,6 +33,9 @@ demo-2d:
 
 demo-carla:  # USER: CARLA 0.9.16 server running
 	$(UV) run --extra carla python scripts/launch_stack.py --backend carla --iface vcan0 --duration 300
+
+gateway-bench:  # USER: vcan0 up; ~3 min: gateway latency vs batching, monitor vs canbusload
+	$(UV) run python scripts/measure_gateway.py --window 15
 
 clean-results:
 	rm -rf results/

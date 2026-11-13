@@ -1,0 +1,13 @@
+# CAN <-> UDP gateway (§5.8, Phase 5). Values from §5.8 unless marked "chosen".
+iface: vcan0
+uplink: {host: 127.0.0.1, port: 48000}     # DATA / STATS / HEARTBEAT -> monitor
+downlink: {host: 127.0.0.1, port: 48001}   # DIAG_REQ <- monitor
+batch_frames: 32             # flush a DATA datagram at this many frames ...
+flush_ms: 5.0                # ... or when the oldest pending frame is this old
+max_datagram: 1400           # [B] incl. 20 B header
+filters:                     # CAN_RAW_FILTER (id, mask); mask 0 = pass everything
+  - {id: 0x000, mask: 0x000} # chosen: pass all, so the monitor also sees unknown IDs (E8)
+recv_own: true               # chosen: uplink the gateway's own Diag_Request frames too
+downlink_ids: [0x7DF]        # only Diag_Request may be written to the bus from UDP
+heartbeat_s: 1.0             # chosen: HEARTBEAT if nothing was sent for this long
+stats_s: 1.0                 # chosen: STATS period

@@ -132,9 +132,10 @@ class EcuBase:
         self.rx_msgs = {
             m.frame_id: m for m in db.messages if any(name in s.receivers for s in m.signals)
         }
-        self.tx_msgs = {m.name: m for m in db.messages if name in m.senders and m.cycle_time}
-        if self.tx_msgs:
-            self.period_ns = min(m.cycle_time for m in self.tx_msgs.values()) * 1_000_000
+        self.tx_msgs = {m.name: m for m in db.messages if name in m.senders}  # incl. event msgs
+        cycles = [m.cycle_time for m in self.tx_msgs.values() if m.cycle_time]
+        if cycles:
+            self.period_ns = min(cycles) * 1_000_000
         else:
             self.period_ns = round(float(self.p.get("period", 0.01)) * 1e9)
         self.tx_counter = dict.fromkeys(self.tx_msgs, 0)

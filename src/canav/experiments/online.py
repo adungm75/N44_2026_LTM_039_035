@@ -41,7 +41,8 @@ DEFAULTS = {  # backend -> (scenario, ECU params)
     ),
 }
 BRIDGE_START_TIMEOUT_S = 120  # CARLA may load the map and spawn actors first
-ONLINE_ECUS = tuple(ECUS)  # Gateway node: raw-socket gateway in Phase 5
+DEFAULT_GATEWAY = Path("config/online/gateway.yaml")
+ONLINE_ECUS = tuple(ECUS)  # Gateway node = raw-socket gateway process (canav.gateway)
 
 
 def _load(x: dict | str | Path) -> dict:
@@ -120,7 +121,9 @@ def _spawn(cmd: list[str], log: Path, stdout=None) -> subprocess.Popen:
     return subprocess.Popen(cmd, stdout=stdout or err, stderr=err, start_new_session=True)
 
 
-def _run_processes(out, backend, iface, dbc, duration, faults, stop_on_goal, stop):
+def _run_processes(
+    out, backend, iface, dbc, duration, faults, stop_on_goal, stop, gateway, monitor
+):
     py = sys.executable
     proc_dir = out / "proc"
     proc_dir.mkdir(exist_ok=True)
@@ -179,6 +182,13 @@ def _run_processes(out, backend, iface, dbc, duration, faults, stop_on_goal, sto
             _fault_arg(faults.get(name)),
         ]
         children.append((name, _spawn(cmd, proc_dir / f"{name}.log")))
+    if monitor:  # before the gateway: it binds the uplink port and is stopped after it
+        cmd = [py, "-m", "canav.monitor", "--out", str(out / "monitor"), "--dbc", str(dbc)]
+        children.append(("monitor", _spawn(cmd, proc_dir / "monitor.log")))
+    if gateway is not None:
+        cmd = [py, "-m", "canav.gateway", "--config", str(gateway), "--iface", iface]
+        cmd += ["--stats-out", str(out / "gateway.stats.json")]
+        children.append(("gateway", _spawn(cmd, proc_dir / "gateway.log")))
 
     previous = signal.signal(signal.SIGINT, lambda *_: stop.set())
     try:
@@ -223,8 +233,15 @@ def run_stack(
     stop_on_goal: bool = True,
     port_base: int | None = None,
     stop: threading.Event | None = None,
+    gateway: str | Path | None = DEFAULT_GATEWAY,
+    monitor: bool = False,
 ) -> dict:
-    """Run the closed loop and return ``metrics.json`` content (also written to ``out_dir``)."""
+    """Run the closed loop and return ``metrics.json`` content (also written to ``out_dir``).
+
+    Process mode only: ``gateway`` = gateway config (None = no gateway process), ``monitor`` =
+    also run ``canav.monitor`` into ``out/monitor``. Raw sockets need a real (v)can interface,
+    so both are ignored with ``iface="virtual"``.
+    """
     out = Path(out_dir)
     (out / "ecu").mkdir(parents=True, exist_ok=True)
     faults = faults or {}
@@ -242,6 +259,8 @@ def run_stack(
         "stop_on_goal": stop_on_goal,
         "dbc": str(dbc),
         "ecus": list(ONLINE_ECUS),
+        "gateway": None if gateway is None or iface == "virtual" else str(gateway),
+        "monitor": monitor and iface != "virtual",
         "faults": {k: _fault_arg(v) for k, v in faults.items()},
         "git": git_hash(),
         "python": sys.version.split()[0],
@@ -253,7 +272,9 @@ def run_stack(
     if iface == "virtual":
         _run_threads(out, backend, sc, prm, dbc, duration, faults, stop_on_goal, stop)
     else:
-        _run_processes(out, backend, iface, dbc, duration, faults, stop_on_goal, stop)
+        _run_processes(
+            out, backend, iface, dbc, duration, faults, stop_on_goal, stop, gateway, monitor
+        )
     wall = time.monotonic() - t0
 
     # pandas-based analysis is imported only now, so the launcher stays small during the run

@@ -7,6 +7,8 @@
 ``--iface vcan0``: bridge and each ECU are separate processes on SocketCAN.
 ``--iface virtual``: everything runs as threads in this process (python-can virtual).
 Ctrl+C stops all children cleanly. Faults: ``--fault Control:drop_prob=0.05`` (repeatable).
+Process mode also starts the raw-socket gateway (``--no-gateway`` to skip) and, with
+``--monitor``, ``canav.monitor`` into ``<out>/monitor``.
 """
 
 from __future__ import annotations
@@ -18,7 +20,7 @@ import time
 from pathlib import Path
 
 from canav.ecu import FaultConfig
-from canav.experiments.online import DEFAULTS, run_stack
+from canav.experiments.online import DEFAULT_GATEWAY, DEFAULTS, run_stack
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -31,6 +33,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--params", default=None, help="default: per backend (experiments.online)")
     p.add_argument("--fault", action="append", default=[], metavar="ECU:k=v,...")
     p.add_argument("--no-stop-on-goal", action="store_true")
+    p.add_argument("--no-gateway", action="store_true", help="do not start the gateway process")
+    p.add_argument("--monitor", action="store_true", help="also run canav.monitor -> out/monitor")
     a = p.parse_args(argv)
 
     out = Path(a.out or f"results/online/{time.strftime('%Y%m%d-%H%M%S')}")
@@ -50,6 +54,8 @@ def main(argv: list[str] | None = None) -> int:
         params=params,
         faults=faults,
         stop_on_goal=not a.no_stop_on_goal,
+        gateway=None if a.no_gateway else DEFAULT_GATEWAY,
+        monitor=a.monitor,
     )
     d, bus, hop = m["driving"], m["bus"], m["hop_latency"]
     print(
