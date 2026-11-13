@@ -1,0 +1,27 @@
+# E0 baseline (§5.10): 1 bus @ 500 kbit/s, safety_first IDs, no faults.
+name: E0
+description: Baseline, single bus 500 kbit/s, safety_first IDs, worst-case stuffing.
+
+network:
+  matrix: config/network/matrix.yaml
+  id_schemes: config/network/id_schemes.yaml
+  scheme: safety_first
+
+sim:
+  duration: 60.0
+  seeds: [1, 2, 3, 4, 5]
+  bitrate: null            # use the bus bitrate from matrix.yaml
+  stuffing: worst
+  tx_queue: priority
+  overwrite: true
+  offsets: random          # one random phase per node
+  error_frame_bits: 31
+  busoff_recovery: true
+  # Consumer tasks (§5.4 rule 4). exec_time values are ASSUMPTIONS (placeholders),
+  # not measurements; Phase 3 measures software latency online.
+  tasks:
+    Control: {exec_time: 0.001}
+    AEB: {exec_time: 0.001}
+    Planning: {exec_time: 0.005}
+  actuators: [SteeringActuator, ThrottleBrakeActuator]
+  faults: []

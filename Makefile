@@ -20,7 +20,7 @@ theory:
 	$(UV) run python -m canav.timing.report --bitrate 500000 --out report/tables/theory_baseline.csv
 
 sim-baseline:
-	@echo "sim-baseline: not implemented yet (Phase 2)"; exit 1
+	$(UV) run python -m canav.experiments.run --config config/experiments/E0_baseline.yaml --engine sim --seeds 1
 
 experiments:
 	@echo "experiments: not implemented yet (Phase 6)"; exit 1
