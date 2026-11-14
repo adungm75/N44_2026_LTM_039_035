@@ -33,7 +33,7 @@ experiments: theory budget  # all SimPy experiments incl. E8 (cached), summary, 
 	$(UV) run python -m canav.analysis.detector
 	$(UV) run python -m canav.analysis.criteria
 
-experiments-online: budget  # USER: vcan0 up; sim2d E0, E7 drop/silent at Control, E8 anomalies
+experiments-online: budget  # requires: vcan0 up; sim2d E0, E7 drop/silent at Control, E8 anomalies
 	$(UV) run python scripts/run_online_experiments.py
 	$(UV) run python scripts/run_e8_online.py
 	$(UV) run python -m canav.analysis.detector
@@ -46,10 +46,10 @@ figures:  # report/figures/*.png + docs/results.md (after make experiments)
 demo-2d:
 	$(UV) run python scripts/launch_stack.py --backend sim2d --iface vcan0 --duration 120
 
-demo-carla:  # USER: CARLA 0.9.16 server running
+demo-carla:  # requires: CARLA 0.9.16 server running
 	$(UV) run --extra carla python scripts/launch_stack.py --backend carla --iface vcan0 --duration 300
 
-gateway-bench:  # USER: vcan0 up; ~3 min: gateway latency vs batching, monitor vs canbusload
+gateway-bench:  # requires: vcan0 up; ~3 min: gateway latency vs batching, monitor vs canbusload
 	$(UV) run python scripts/measure_gateway.py --window 15
 
 clean-results:

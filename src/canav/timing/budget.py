@@ -89,7 +89,7 @@ def compute(cfg: dict) -> dict:
             "network_split": "equal over 2 CAN hops (chosen)",
             "sources": {
                 "ttc_s": f"{cfg['ecu_params']}: AEB.ttc_threshold",
-                "decel_mps2": f"{cfg['ecu_params']}: AEB.decel_req (USER decision 2026-11-13)",
+                "decel_mps2": f"{cfg['ecu_params']}: AEB.decel_req (chosen)",
                 "design_speed_kmh": f"{cfg['_path']}: design_speed_kmh (chosen)",
                 "shares": f"{cfg['_path']}: shares (advisor 2026-11-13)",
                 "sensing_sample_age_max_s": f"{cfg['matrix']}: max period of the sensing msgs",

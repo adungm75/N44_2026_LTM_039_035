@@ -1,7 +1,7 @@
 """The online ECUs. Each class = one CAN node; logic per spec.
 
 Ego frame: origin at the rear axle, x forward, y left. ObjectList.x is the longitudinal gap
-from the front bumper to the near edge of the object (ground-truth perception, D8).
+from the front bumper to the near edge of the object (ground-truth perception).
 """
 
 from __future__ import annotations

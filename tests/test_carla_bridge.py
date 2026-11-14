@@ -60,7 +60,7 @@ def test_unknown_backend():
 
 @pytest.mark.carla
 def test_carla_backend_smoke():
-    """Needs a running CARLA server (USER). Spawns, drives straight, cleans up."""
+    """Needs a running CARLA server. Spawns, drives straight, cleans up."""
     import carla
 
     sc = yaml.safe_load((ROOT / "config/scenarios/carla_town02.yaml").read_text())

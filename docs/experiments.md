@@ -9,7 +9,7 @@ tự động); không có số nào viết tay.
 ```
 make setup                 # uv sync --extra carla --extra parquet
 make experiments           # SimPy: budget -> E0..E5, E7, E8 (60 s x 5 seed, cache) -> summary -> E9 -> tiêu chí
-make experiments-online    # USER: vcan0 đã bật (sudo scripts/setup_vcan.sh); ~7 phút (gồm E8 online)
+make experiments-online    # cần vcan0 đã bật (sudo scripts/setup_vcan.sh); ~7 phút (gồm E8 online)
 ```
 
 - `make budget` → `results/budget/aeb_budget.json` (budget end-to-end chuỗi AEB).
@@ -81,8 +81,7 @@ Mỗi biến thể được xét trên mọi seed (một seed trượt là biế
 - **Budget** (`results/budget/aeb_budget.json`): L_max(v) = TTC − v/(2a), TTC và a = `decel_req`
   từ `ecu_params.yaml`; chia 60/20/20 % (advisor); phần mạng chia đều 2 hop (chọn); D mỗi hop chặn
   ở T (chọn). Tốc độ thiết kế 60 km/h (chọn: đầu trên dải quét của advisor).
-- E4: tải cao nhất đạt mọi deadline so với 50 % (có verdict) và 70 % (chỉ tham chiếu), quyết định
-  của USER.
+- E4: tải cao nhất đạt mọi deadline so với 50 % (có verdict) và 70 % (chỉ tham chiếu).
 - E2E: sim — số instance mất nằm giữa hai frame nhận được (đếm chính xác theo số thứ tự)
   so với số khoảng trống counter; online — số chuỗi drop của Control so với `counter_err` ở
   actuator; Control im lặng → thời gian tới safe state > 3 chu kỳ.

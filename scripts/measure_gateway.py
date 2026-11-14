@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Phase 5 measurement: gateway latency vs batching, monitor vs ``canbusload``, diag on the bus.
 
-    python scripts/measure_gateway.py --window 15      (USER: vcan0 up, can-utils installed)
+    python scripts/measure_gateway.py --window 15      (requires: vcan0 up, can-utils installed)
 
 1. Starts the online stack (sim2d, vcan0, no gateway, no stop at goal) as traffic source.
 2. Runs ``canbusload`` (worst-case and ``-e`` exact stuffing) for the whole measurement.

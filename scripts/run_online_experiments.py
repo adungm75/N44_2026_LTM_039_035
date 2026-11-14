@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Online experiments of Phase 6 (USER: vcan0 up): sim2d stack on vcan0, processes + gateway.
+"""Online experiments of Phase 6 (requires: vcan0 up): sim2d stack on vcan0, processes + gateway.
 
 - ``E0``: baseline, until the goal (driving metrics, 0 CRC/counter errors).
 - ``E7_drop5_control``: Control drops 5 % of its frames ( online).

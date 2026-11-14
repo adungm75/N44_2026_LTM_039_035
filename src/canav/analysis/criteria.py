@@ -31,10 +31,10 @@ import pandas as pd
 
 from canav.analysis.tables import read_table
 
-LOAD_THRESHOLD = 0.50  # CiA "Designing a CAN network" (rule of thumb), level decided by USER
-LOAD_REFERENCE = 0.70  # SAE J1939 / CANopen practice, reported without verdict (USER)
-SRC_LOAD = 'CiA "Designing a CAN network" (rule of thumb; level decided by USER 2026-11-13)'
-SRC_REF = "SAE J1939 / CANopen practice (rule of thumb; reference only, USER 2026-11-13)"
+LOAD_THRESHOLD = 0.50  # CiA "Designing a CAN network" (rule of thumb), level chosen
+LOAD_REFERENCE = 0.70  # SAE J1939 / CANopen practice, reported without verdict
+SRC_LOAD = 'CiA "Designing a CAN network" (rule of thumb; level chosen for this project)'
+SRC_REF = "SAE J1939 / CANopen practice (rule of thumb; reference only)"
 SRC_D = "D = T (chosen); AEB chain D from results/budget/aeb_budget.json"
 SRC_E2E = "chain e2e limit (0.6 + 0.2) x L_max at design speed (aeb_budget.json; chosen split)"
 SRC_WD = "safe state after > 3 missed cycles (watchdog_cycles = 3)"

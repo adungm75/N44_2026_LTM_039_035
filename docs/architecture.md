@@ -77,7 +77,7 @@
 
 ### Tiến trình và kênh
 - 9 ECU (`canav.ecu.nodes`) + bridge (`canav.vehicle.bridge`) + `candump -L` = 11 process trên
-  `vcan0` (`make demo-2d`). Node Gateway của matrix sẽ là gateway raw-socket ở Phase 5 (D5), nên
+  `vcan0` (`make demo-2d`). Node Gateway của matrix sẽ là gateway raw-socket ở Phase 5, nên
   chưa có ECU python-can cho nó.
 - `--iface virtual`: mọi thứ chạy bằng thread trong 1 process (python-can virtual chỉ trong
   process); dùng cho test. Do GIL, độ trễ/jitter ở chế độ này **không đại diện**; số đo online lấy
@@ -164,12 +164,12 @@
   0.79 m, 1 va chạm (lần thử 1). Đổi điểm nhìn trước 3/6/9 m, `ld_gain 0.6`, `ld_min 3` → lệch ngang RMS ≈ 0.25 m.
 - Perception dùng hành lang thẳng theo hệ ego; trong khúc cua, người đi bộ ở phía trong cua có thể
   lọt vào hành lang và kích hoạt AEB (seed 1: TTC 1.47 s ở 3.9 m/s). Đây là hệ quả của perception
-  đơn giản hóa (D8), chưa sửa.
+  đơn giản hóa, chưa sửa.
 
 ## Gateway và monitor (Phase 5)
 - Giao thức, phương pháp đo: `docs/gateway_protocol.md`.
 - Trong `launch_stack.py` chế độ process, node Gateway = tiến trình `canav.gateway` (raw socket,
-  không python-can, D5) với `config/online/gateway.yaml`; `--no-gateway` để bỏ. `--monitor` chạy
+  không python-can) với `config/online/gateway.yaml`; `--no-gateway` để bỏ. `--monitor` chạy
   thêm `canav.monitor` ghi vào `<out>/monitor`. Chế độ `virtual` không có gateway (raw socket cần
   interface thật).
 - Số tiến trình: 9 ECU + bridge + gateway + candump = 12 (giới hạn ); thêm monitor là 13

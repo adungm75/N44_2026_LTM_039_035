@@ -13,15 +13,15 @@ luận (chương 4).
 ## 1.2 Kiến trúc hai tầng, một định nghĩa mạng
 
 - **Nguồn sự thật duy nhất**: `config/network/matrix.yaml` (10 nút, 1 bus 500 kbit/s, 20 message).
-  File DBC `config/dbc/canav.dbc` được sinh bằng cantools, không sửa tay (D7).
+  File DBC `config/dbc/canav.dbc` được sinh bằng cantools, không sửa tay.
 - **Tầng online**: 9 ECU là 9 tiến trình Python trên SocketCAN `vcan0` (python-can), cùng một bridge
   nối với bộ mô phỏng xe (`sim2d` – mô hình xe đạp động học tự viết, hoặc CARLA 0.9.16), một gateway
   raw-socket và `candump`. Cảm biến thô không đi trên CAN: bridge gửi trạng thái qua UDP loopback
-  tới các ECU cảm biến, actuator gửi lệnh về bridge qua UDP (D4).
+  tới các ECU cảm biến, actuator gửi lệnh về bridge qua UDP.
 - **Tầng offline**: mô hình bus SimPy với phân xử theo ID, thời gian bit, bit stuffing, lỗi khung,
-  TEC/bus-off, gateway store-and-forward và chuỗi nhân quả `origin_ts` (D1, D2). Đây là công cụ chính
+  TEC/bus-off, gateway store-and-forward và chuỗi nhân quả `origin_ts`. Đây là công cụ chính
   cho các thí nghiệm quét tham số.
-- **Một định dạng log** cho cả hai tầng: `candump -L` + sidecar JSONL (D6).
+- **Một định dạng log** cho cả hai tầng: `candump -L` + sidecar JSONL.
 
 ## 1.3 Ma trận message
 
@@ -43,7 +43,7 @@ luận (chương 4).
 ## 1.4 Logic ECU (tầng online)
 
 - ChassisSensors/GNSS lấy mẫu trạng thái từ bridge; Perception lọc vật trong hành lang 50 m phía
-  trước (ground truth, D8), luôn gửi 8 frame ObjectList.
+  trước (ground truth), luôn gửi 8 frame ObjectList.
 - Planning: pose = GNSS + dead reckoning, 3 điểm nhìn trước, tốc độ mục tiêu giảm khi có vật trong
   đường đi, đèn đỏ, khúc cua, đích.
 - Control: Pure Pursuit + PI tốc độ (giới hạn giảm tốc 3 m/s²). AEB: TTC < 1.5 s với vật trong đường
@@ -54,7 +54,7 @@ luận (chương 4).
 
 ## 1.5 Gateway CAN ↔ UDP và monitor
 
-- Gateway dùng raw socket `AF_CAN` (không python-can, D5), một vòng `selectors`, timestamp kernel
+- Gateway dùng raw socket `AF_CAN` (không python-can), một vòng `selectors`, timestamp kernel
   `SO_TIMESTAMPNS`, gom frame (N frame hoặc timeout) vào datagram UDP theo giao thức nhị phân "CAV1"
   (header 20 B + record 14 + len B, có `seq` để phát hiện mất gói).
 - Monitor giải mã, tính mất gói, độ trễ gateway, tải bus theo cửa sổ, tần suất từng ID, ID lạ, lỗi

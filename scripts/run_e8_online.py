@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""E8 online (USER: vcan0 up, can-utils): one anomaly per run of the
+"""E8 online (requires: vcan0 up, can-utils): one anomaly per run of the
 sim2d stack on vcan0. The anomaly starts 20 s after the bridge wrote ``route.json`` and lasts
 10 s (chosen, same as the SimPy E8); its CLOCK_REALTIME interval is written to
 ``results/online_exp/E8_<type>/anomalies.json`` for the window labels (E9).

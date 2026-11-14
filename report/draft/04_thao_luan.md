@@ -36,7 +36,7 @@
 - **vcan không phải bus thật**: không có phân xử bit, không có lỗi khung, băng thông không giới hạn —
   flood trên vcan không làm các ECU khác mất frame như trong SimPy; timing online phản ánh lịch của hệ
   điều hành và Python, không phải bộ điều khiển CAN.
-- **Perception đơn giản hoá (D8)**: ground truth của bộ mô phỏng, hành lang thẳng phía trước; trong khúc
+- **Perception đơn giản hoá**: ground truth của bộ mô phỏng, hành lang thẳng phía trước; trong khúc
   cua, người đi bộ ở phía trong cua có thể kích hoạt AEB (đã thấy ở CARLA).
 - **e2e theo origin mới nhất**: mất 1 trong 8 frame ObjectList không làm tăng e2e đo được, nên E7 drop
   không thể làm chuỗi AEB trượt theo định nghĩa này; tuổi dữ liệu của từng vật cần một định nghĩa khác.

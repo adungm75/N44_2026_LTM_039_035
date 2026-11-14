@@ -12,7 +12,7 @@ gateway), `canav.monitor` (bên nhận). Cấu hình: `config/online/gateway.yam
 ```
 
 - Gateway là một tiến trình, một vòng `selectors` theo dõi 2 socket: raw socket CAN (bind vào
-  `vcan0`) và socket UDP downlink. Không dùng python-can (D5).
+  `vcan0`) và socket UDP downlink. Không dùng python-can.
 - Thời điểm nhận frame lấy từ kernel: `SO_TIMESTAMPNS` + `recvmsg` (CLOCK_REALTIME, ns). Nếu
   không có cmsg timestamp thì dùng `time.time_ns()` và bật cờ `FLAG_SW_TIMESTAMP`.
 - `CAN_RAW_RECV_OWN_MSGS` bật: frame do chính gateway gửi (0x7DF) cũng được đưa lên uplink, có

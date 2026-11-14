@@ -182,7 +182,7 @@ def test_monitor_udp_loopback(db):
     assert ids["0x200"]["name"] == "WheelSpeed" and ids["0x200"]["expected_hz"] == 100
 
 
-# --------------------------------------------------------------- vcan (USER)
+# --------------------------------------------------------------- vcan (needs vcan0 up)
 @pytest.mark.vcan
 def test_gateway_on_vcan(db):
     up = _udp(48530)
