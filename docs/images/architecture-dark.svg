@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 560" width="1400" height="560" role="img" aria-label="Kiến trúc mạng CAN của xe tự hành mô phỏng">
+<style>text{font-family:-apple-system,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif;text-anchor:middle}.t{font-size:14px;font-weight:600}.s{font-size:12px}.g{font-size:13px;font-weight:700;text-anchor:start}.l{font-size:12.5px}.la{font-size:12.5px;text-anchor:start}.bus{font-size:14px;font-weight:700}</style>
+<defs>
+<marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9198a1"/></marker>
+<marker id="ard" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#ef5350"/></marker>
+</defs>
+<rect x="270" y="60" width="472" height="130" rx="12" fill="#64b5f6" fill-opacity="0.07" stroke="#64b5f6" stroke-opacity="0.6" stroke-dasharray="5 4"/>
+<text x="284" y="82" class="g" fill="#cfe7fc">1. Cảm biến</text>
+<rect x="772" y="60" width="472" height="130" rx="12" fill="#ffb74d" fill-opacity="0.07" stroke="#ffb74d" stroke-opacity="0.6" stroke-dasharray="5 4"/>
+<text x="786" y="82" class="g" fill="#ffe4c2">2. Ra quyết định</text>
+<line x1="354.0" y1="160" x2="354.0" y2="265" stroke="#9198a1" stroke-width="2"/>
+<circle cx="354.0" cy="265" r="4" fill="#9198a1"/>
+<rect x="284" y="96" width="140" height="64" rx="8" fill="#0f2a44" stroke="#64b5f6" stroke-width="1.5"/>
+<text x="354.0" y="123.5" class="t" fill="#cfe7fc">ChassisSensors</text>
+<text x="354.0" y="140.5" class="s" fill="#cfe7fc">tốc độ bánh, IMU</text>
+<line x1="506.0" y1="160" x2="506.0" y2="265" stroke="#9198a1" stroke-width="2"/>
+<circle cx="506.0" cy="265" r="4" fill="#9198a1"/>
+<rect x="436" y="96" width="140" height="64" rx="8" fill="#0f2a44" stroke="#64b5f6" stroke-width="1.5"/>
+<text x="506.0" y="123.5" class="t" fill="#cfe7fc">GNSS</text>
+<text x="506.0" y="140.5" class="s" fill="#cfe7fc">vị trí</text>
+<line x1="658.0" y1="160" x2="658.0" y2="265" stroke="#9198a1" stroke-width="2"/>
+<circle cx="658.0" cy="265" r="4" fill="#9198a1"/>
+<rect x="588" y="96" width="140" height="64" rx="8" fill="#0f2a44" stroke="#64b5f6" stroke-width="1.5"/>
+<text x="658.0" y="123.5" class="t" fill="#cfe7fc">Perception</text>
+<text x="658.0" y="140.5" class="s" fill="#cfe7fc">vật cản, đèn giao thông</text>
+<line x1="856.0" y1="160" x2="856.0" y2="265" stroke="#9198a1" stroke-width="2"/>
+<circle cx="856.0" cy="265" r="4" fill="#9198a1"/>
+<rect x="786" y="96" width="140" height="64" rx="8" fill="#3a2610" stroke="#ffb74d" stroke-width="1.5"/>
+<text x="856.0" y="123.5" class="t" fill="#ffe4c2">Planning</text>
+<text x="856.0" y="140.5" class="s" fill="#ffe4c2">lập lộ trình</text>
+<line x1="1008.0" y1="160" x2="1008.0" y2="265" stroke="#9198a1" stroke-width="2"/>
+<circle cx="1008.0" cy="265" r="4" fill="#9198a1"/>
+<rect x="938" y="96" width="140" height="64" rx="8" fill="#3a2610" stroke="#ffb74d" stroke-width="1.5"/>
+<text x="1008.0" y="123.5" class="t" fill="#ffe4c2">Control</text>
+<text x="1008.0" y="140.5" class="s" fill="#ffe4c2">bám lộ trình, tốc độ</text>
+<line x1="1160.0" y1="160" x2="1160.0" y2="265" stroke="#9198a1" stroke-width="2"/>
+<circle cx="1160.0" cy="265" r="4" fill="#9198a1"/>
+<rect x="1090" y="96" width="140" height="64" rx="8" fill="#3d1416" stroke="#ef5350" stroke-width="2.5"/>
+<text x="1160.0" y="123.5" class="t" fill="#ffd6d6">AEB</text>
+<text x="1160.0" y="140.5" class="s" fill="#ffd6d6">phanh khẩn cấp</text>
+<rect x="380" y="340" width="370" height="130" rx="12" fill="#81c784" fill-opacity="0.07" stroke="#81c784" stroke-opacity="0.6" stroke-dasharray="5 4"/>
+<text x="394" y="458" class="g" fill="#d4edd5">3. Chấp hành</text>
+<rect x="810" y="340" width="320" height="130" rx="12" fill="#ce93d8" fill-opacity="0.07" stroke="#ce93d8" stroke-opacity="0.6" stroke-dasharray="5 4"/>
+<text x="824" y="458" class="g" fill="#f0d9f5">4. Thân xe và chẩn đoán</text>
+<line x1="476.5" y1="352" x2="476.5" y2="275" stroke="#9198a1" stroke-width="2"/>
+<circle cx="476.5" cy="275" r="4" fill="#9198a1"/>
+<rect x="394" y="352" width="165" height="64" rx="8" fill="#123220" stroke="#81c784" stroke-width="1.5"/>
+<text x="476.5" y="379.5" class="t" fill="#d4edd5">SteeringActuator</text>
+<text x="476.5" y="396.5" class="s" fill="#d4edd5">đánh lái</text>
+<line x1="653.5" y1="352" x2="653.5" y2="275" stroke="#9198a1" stroke-width="2"/>
+<circle cx="653.5" cy="275" r="4" fill="#9198a1"/>
+<rect x="571" y="352" width="165" height="64" rx="8" fill="#123220" stroke="#81c784" stroke-width="1.5"/>
+<text x="653.5" y="379.5" class="t" fill="#d4edd5">ThrottleBrakeActuator</text>
+<text x="653.5" y="396.5" class="s" fill="#d4edd5">ga, phanh</text>
+<line x1="894.0" y1="352" x2="894.0" y2="275" stroke="#9198a1" stroke-width="2"/>
+<circle cx="894.0" cy="275" r="4" fill="#9198a1"/>
+<rect x="824" y="352" width="140" height="64" rx="8" fill="#2d173a" stroke="#ce93d8" stroke-width="1.5"/>
+<text x="894.0" y="379.5" class="t" fill="#f0d9f5">BodyHMI</text>
+<text x="894.0" y="396.5" class="s" fill="#f0d9f5">trạng thái xe</text>
+<line x1="1046.0" y1="352" x2="1046.0" y2="275" stroke="#9198a1" stroke-width="2"/>
+<circle cx="1046.0" cy="275" r="4" fill="#9198a1"/>
+<rect x="976" y="352" width="140" height="64" rx="8" fill="#2d173a" stroke="#ce93d8" stroke-width="1.5"/>
+<text x="1046.0" y="379.5" class="t" fill="#f0d9f5">Gateway</text>
+<text x="1046.0" y="396.5" class="s" fill="#f0d9f5">CAN ↔ UDP, raw socket</text>
+<rect x="250" y="265" width="940" height="10" rx="5" fill="#9198a1"/>
+<text x="256" y="300" class="bus" fill="#e6edf3" style="text-anchor:start">Bus CAN · vcan0 · 500 kbit/s</text>
+<path d="M1170.0 160 V288 H663.5 V350" fill="none" stroke="#ef5350" stroke-width="3" marker-end="url(#ard)"/>
+<text x="673.5" y="306" class="la" fill="#ffd6d6" font-weight="600">AEB_BrakeRequest · ID 0x010</text>
+<text x="673.5" y="322" class="la" fill="#ffd6d6">ưu tiên cao nhất trên bus</text>
+<rect x="20" y="96" width="150" height="340" rx="14" fill="#161b22" stroke="#9198a1" stroke-width="2"/>
+<text x="95.0" y="253.0" class="t" fill="#e6edf3">Xe mô phỏng</text>
+<text x="95.0" y="270.0" class="s" fill="#e6edf3">sim2d hoặc</text>
+<text x="95.0" y="287.0" class="s" fill="#e6edf3">CARLA 0.9.16</text>
+<rect x="1220" y="310" width="160" height="150" rx="14" fill="#161b22" stroke="#9198a1" stroke-width="2"/>
+<text x="1300.0" y="363.5" class="t" fill="#e6edf3">Monitor</text>
+<text x="1300.0" y="380.5" class="s" fill="#e6edf3">giám sát bus,</text>
+<text x="1300.0" y="397.5" class="s" fill="#e6edf3">phát hiện</text>
+<text x="1300.0" y="414.5" class="s" fill="#e6edf3">bất thường</text>
+<path d="M170 128 H268" stroke="#9198a1" stroke-width="2" stroke-dasharray="7 5" fill="none" marker-end="url(#ar)"/>
+<text x="220.0" y="102" class="l" fill="#9198a1">dữ liệu</text>
+<text x="220.0" y="118" class="l" fill="#9198a1">cảm biến</text>
+<path d="M380 400 H172" stroke="#9198a1" stroke-width="2" stroke-dasharray="7 5" fill="none" marker-end="url(#ar)"/>
+<text x="276.0" y="390" class="l" fill="#9198a1">lệnh lái, ga, phanh</text>
+<path d="M1120 384 H1218" stroke="#9198a1" stroke-width="2" stroke-dasharray="7 5" fill="none" marker-start="url(#ar)" marker-end="url(#ar)"/>
+<text x="1167.0" y="374" class="l" fill="#9198a1">UDP</text>
+<rect x="270" y="519" width="44" height="8" rx="4" fill="#9198a1"/>
+<text x="324" y="528" class="la" fill="#e6edf3">bus CAN (mọi ECU cùng nghe)</text>
+<line x1="560" y1="523" x2="604" y2="523" stroke="#9198a1" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="614" y="528" class="la" fill="#e6edf3">UDP qua 127.0.0.1</text>
+<line x1="790" y1="523" x2="834" y2="523" stroke="#ef5350" stroke-width="3"/>
+<text x="844" y="528" class="la" fill="#e6edf3">đường phanh khẩn cấp</text>
+</svg>
