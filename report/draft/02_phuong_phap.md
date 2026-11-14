@@ -1,6 +1,6 @@
 # Chương 2. Phương pháp
 
-> Bản nháp. Chi tiết: `docs/architecture.md`, `docs/experiments.md`; tiêu chí `` §5.12.
+> Bản nháp. Chi tiết: `docs/architecture.md`, `docs/experiments.md`.
 
 ## 2.1 Phân tích thời gian
 
@@ -43,7 +43,7 @@ thời gian về đích, quãng phanh AEB).
 
 Tải tổng hợp: frame 8 byte, chu kỳ 10 ms, mỗi message một node, ID chia đều trên các ID trống.
 
-## 2.5 Tiêu chí đánh giá (§5.12)
+## 2.5 Tiêu chí đánh giá
 
 - **Deadline**: R ≤ D cho mọi ID, cả WCRT Davis và max R mô phỏng; D = T mặc định (giả định, với
   overwrite thì R > T nghĩa là mất instance).

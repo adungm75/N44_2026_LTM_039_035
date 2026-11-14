@@ -1,4 +1,4 @@
-# CAN <-> UDP gateway (§5.8, Phase 5). Values from §5.8 unless marked "chosen".
+# CAN <-> UDP gateway (Phase 5). Values from the design spec unless marked "chosen".
 iface: vcan0
 uplink: {host: 127.0.0.1, port: 48000}     # DATA / STATS / HEARTBEAT -> monitor
 downlink: {host: 127.0.0.1, port: 48001}   # DIAG_REQ <- monitor

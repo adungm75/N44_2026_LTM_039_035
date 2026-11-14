@@ -1,4 +1,4 @@
-# E0 baseline (§5.10): 1 bus @ 500 kbit/s, safety_first IDs, no faults.
+# E0 baseline: 1 bus @ 500 kbit/s, safety_first IDs, no faults.
 name: E0
 description: Baseline, single bus 500 kbit/s, safety_first IDs, worst-case stuffing.
 
@@ -6,7 +6,7 @@ network:
   matrix: config/network/matrix.yaml
   id_schemes: config/network/id_schemes.yaml
   scheme: safety_first
-  # AEB-chain deadlines (ObjectList_k, AEB_BrakeRequest) from the end-to-end budget (§5.12.1);
+  # AEB-chain deadlines (ObjectList_k, AEB_BrakeRequest) from the end-to-end budget;
   # every other message keeps D = T.
   deadlines: config/experiments/aeb_budget.yaml
 
@@ -22,7 +22,7 @@ sim:
   offsets: random          # one random phase per node
   error_frame_bits: 31
   busoff_recovery: true
-  # Consumer tasks (§5.4 rule 4). exec_time values are ASSUMPTIONS (placeholders),
+  # Consumer tasks. exec_time values are ASSUMPTIONS (placeholders),
   # not measurements; Phase 3 measures software latency online.
   tasks:
     Control: {exec_time: 0.001}

@@ -2,7 +2,7 @@
 
 Tài liệu này được sinh tự động bởi `python -m canav.analysis.results_doc` (`make figures`)
 từ `results/` và `report/tables/`; mọi số dưới đây đều tính từ các file đó. Phương pháp và
-giới hạn: `docs/experiments.md`. Tiêu chí: §5.12.
+giới hạn: `docs/experiments.md`.
 
 ## Hình 1. Tải bus theo bitrate (E1)
 
@@ -116,4 +116,4 @@ giới hạn: `docs/experiments.md`. Tiêu chí: §5.12.
 | 7 | E8/E9 sim | ROC over k (FPR, TPR) | k=2: (0.00098, 1.0000); k=3: (0.00098, 1.0000); k=4: (0.00098, 0.9988); k=5: (0.00098, 0.9988) | none | n/a |
 | 5 | E7 online (P1) | maximum avoidance speed vs drop/delay at Control/AEB | not run | - | n/a (P1, not run in Phase 6) |
 
-Nguồn của mỗi ngưỡng nằm ở cột `threshold_source` của bảng CSV. `n/a`: tiêu chí không có ngưỡng (gateway, bộ phát hiện) hoặc chưa chạy (§5.12.5, P1).
+Nguồn của mỗi ngưỡng nằm ở cột `threshold_source` của bảng CSV. `n/a`: tiêu chí không có ngưỡng (gateway, bộ phát hiện) hoặc chưa chạy (P1).

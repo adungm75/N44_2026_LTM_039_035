@@ -1,4 +1,4 @@
-# E1 (P0, §5.10): bitrate sweep. Verdict (§5.12.3): lowest bitrate where every
+# E1 (P0): bitrate sweep. Verdict: lowest bitrate where every
 # deadline holds (Davis WCRT and simulated max R).
 base: config/experiments/E0_baseline.yaml
 name: E1

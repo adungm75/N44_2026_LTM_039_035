@@ -1,4 +1,4 @@
-"""Figures for the report (§6 Phase 8) -> ``report/figures/*.png``.
+"""Figures for the report -> ``report/figures/*.png``.
 
 Inputs: ``results/summary.parquet``, ``results/budget/aeb_budget.json``, ``report/tables/*.csv``
 and, when present, ``results/online_exp`` (vcan0 runs). A figure whose online series is

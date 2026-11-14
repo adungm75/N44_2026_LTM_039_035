@@ -24,7 +24,7 @@
 - Nibble cao byte DLC-2 không dùng. Validator từ chối signal nằm ngoài vùng bit dữ liệu.
 - `AliveCounter`, `CRC8` được netdef tự thêm vào DBC; tên này bị cấm cho signal của người dùng.
 
-### Lựa chọn bổ sung so với gợi ý §5.1
+### Lựa chọn bổ sung
 
 - `lane_heading_err`: s12, scale 0.001 rad (spec không cho scale).
 - `ObjectList.cls`: 0 unknown, 1 car, 2 pedestrian, 3 cyclist, 4 static obstacle.
@@ -70,7 +70,7 @@
   từng chu kỳ). Payload = 0 + counter/CRC E2E (counter = instance mod 16).
 - CAN FD (P2) chưa làm: `Bus(fd=True)` báo `NotImplementedError`.
 - Output mỗi run: `can.log` (`candump -L`, chỉ frame `ok`, interface = tên bus), `frames.jsonl`
-  (sidecar §5.4 + `dlc`), `errors.jsonl` (mỗi lần truyền lỗi), `metrics.json`, `config.yaml`
+  (sidecar + `dlc`), `errors.jsonl` (mỗi lần truyền lỗi), `metrics.json`, `config.yaml`
   (cấu hình đã resolve + seed + git hash). `run_id = seed<N>-<hash cấu hình>`.
 
 ## Tầng online (Phase 3)
@@ -147,7 +147,7 @@
   Town02 (tuyến 200–300 m, 2–3 đèn, ít nhất 1 lần rẽ).
 - Đèn: các stop waypoint của mọi `traffic.traffic_light` được chiếu lên route (|lệch ngang| ≤ 1.5 m,
   cùng hướng ±30°); `dist_stop` = s(vạch) − s(cản trước), trạng thái từ `get_state()` của đèn đó.
-  Không dùng `vehicle.get_traffic_light_state()` (§5.7) vì hàm này chỉ báo khi xe đã vào vùng
+  Không dùng `vehicle.get_traffic_light_state()` vì hàm này chỉ báo khi xe đã vào vùng
   trigger sát giao lộ, quá muộn để dừng với `a_comf` và không cho khoảng cách tới vạch.
 - Vật: mọi xe và người đi bộ (từ `world.get_actors()`) trong 60 m; tâm = tâm bounding box; id CARLA
   đổi sang id nhỏ 1..255 theo thứ tự xuất hiện (`ObjectList.obj_id` là u8). Va chạm từ cảm biến
@@ -172,7 +172,7 @@
   không python-can, D5) với `config/online/gateway.yaml`; `--no-gateway` để bỏ. `--monitor` chạy
   thêm `canav.monitor` ghi vào `<out>/monitor`. Chế độ `virtual` không có gateway (raw socket cần
   interface thật).
-- Số tiến trình: 9 ECU + bridge + gateway + candump = 12 (giới hạn §1); thêm monitor là 13
+- Số tiến trình: 9 ECU + bridge + gateway + candump = 12 (giới hạn ); thêm monitor là 13
   (tùy chọn, công cụ đo chứ không phải node của mạng).
 - `EcuBase.tx_msgs` nay gồm cả message sự kiện (Diag_Response) để ECU gửi được; chu kỳ ECU vẫn lấy
   từ message định kỳ.

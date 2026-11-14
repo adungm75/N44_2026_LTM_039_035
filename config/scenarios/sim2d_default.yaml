@@ -1,4 +1,4 @@
-# sim2d scenario (§5.7). SI units; s = arc length along the route [m],
+# sim2d scenario. SI units; s = arc length along the route [m],
 # lat = lateral offset from the route centre line [m], > 0 = left.
 # All values are scenario PARAMETERS (chosen, not measured).
 dt: 0.01                     # bridge tick [s], paced to real time

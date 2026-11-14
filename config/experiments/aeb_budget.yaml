@@ -1,4 +1,4 @@
-# AEB chain end-to-end budget (§5.12.1) -> results/budget/aeb_budget.json
+# AEB chain end-to-end budget -> results/budget/aeb_budget.json
 # (`python -m canav.timing.budget`). Numbers are computed there, not written here.
 ecu_params: config/online/ecu_params.yaml   # AEB.ttc_threshold, AEB.decel_req (a = decel_req, USER)
 matrix: config/network/matrix.yaml

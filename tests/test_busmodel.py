@@ -33,7 +33,7 @@ def _r_max(log, name):
 
 
 def test_davis_example_exact():
-    """§5.4 rule 5: R_C = 3.5 ms exactly (needs releases before arbitration at equal t)."""
+    """R_C = 3.5 ms exactly (needs releases before arbitration at equal t)."""
     env = simpy.Environment()
     bus, log = _bus(env, 125_000)
     _source(env, bus, "nA", "A", 1, 7, 0.0025)

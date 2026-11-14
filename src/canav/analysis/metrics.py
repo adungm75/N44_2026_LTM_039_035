@@ -1,4 +1,4 @@
-"""Network metrics from the sidecar (§5.9). Inputs int ns, outputs float s."""
+"""Network metrics from the sidecar. Inputs int ns, outputs float s."""
 
 from __future__ import annotations
 

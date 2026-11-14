@@ -1,4 +1,4 @@
-"""Classic CAN frame timing, theoretical bus load and Davis WCRT (§5.2-5.3).
+"""Classic CAN frame timing, theoretical bus load and Davis WCRT.
 
 Times are exact :class:`fractions.Fraction` internally and returned as float seconds.
 """
@@ -137,7 +137,7 @@ def bus_load_theory(msgs: Iterable[TimingMessage], bitrate: float) -> float:
 
 
 def davis_wcrt(msgs: Sequence[TimingMessage], bitrate: float) -> list[WcrtResult]:
-    """Worst-case response times per Davis, Burns, Bril, Lukkien (2007), eqs. per §5.3.
+    """Worst-case response times per Davis, Burns, Bril, Lukkien (2007).
 
     Lower CAN ID = higher priority. Event messages (period None) only contribute blocking.
     Results are returned for periodic messages, in ascending ID order.

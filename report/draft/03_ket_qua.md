@@ -1,7 +1,7 @@
 # Chương 3. Kết quả
 
 > Bản nháp. Mọi số trong chương này lấy từ `docs/results.md` (sinh tự động từ `results/`),
-> `report/tables/*.csv` và `PROGRESS.md` (các lần chạy online). Hình: `report/figures/`.
+> `report/tables/*.csv`. Hình: `report/figures/`.
 > Khi chạy lại thí nghiệm, cập nhật chương này theo `docs/results.md`.
 
 ## 3.1 Baseline (E0)

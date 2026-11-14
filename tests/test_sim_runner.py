@@ -28,7 +28,7 @@ def _e0_sim(**over) -> SimConfig:
 
 
 def test_baseline_sim_within_wcrt(net):
-    """§5.4 rule 5: offsets 0, J 0, worst stuffing -> max R <= WCRT (+1 tau) for every ID."""
+    """offsets 0, J 0, worst stuffing -> max R <= WCRT (+1 tau) for every ID."""
     cfg = _e0_sim(offsets="zero", duration=1.0)
     res = run_sim(net, cfg, seed=1)
     wcrt, _ = theory(net, cfg)

@@ -1,4 +1,4 @@
-"""SimPy model of classic CAN: arbitration, bit timing, stuffing, errors (§5.4).
+"""SimPy model of classic CAN: arbitration, bit timing, stuffing, errors.
 
 Simulation time is integer nanoseconds (``env.now``), matching the int-ns log convention.
 Bit durations are rounded to the nearest ns (exact for 125k/250k/500k/1M).
@@ -51,7 +51,7 @@ def s_to_ns(seconds: float) -> int:
 class _Late(Event):
     """Fires at the current instant, after every normal-priority event of that instant.
 
-    Used before arbitration so that all releases at time t are queued first (§5.4 rule 1).
+    Used before arbitration so that all releases at time t are queued first.
     """
 
     def __init__(self, env: simpy.Environment):

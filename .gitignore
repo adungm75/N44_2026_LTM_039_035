@@ -4,3 +4,12 @@ results/
 __pycache__/
 .pytest_cache/
 .ruff_cache/
+
+# secrets / editor / build
+.env
+.env.*
+.vscode/
+.idea/
+.DS_Store
+*.egg-info/
+dist/

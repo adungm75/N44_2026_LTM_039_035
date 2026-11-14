@@ -1,4 +1,4 @@
-"""Metrics of an online run from the ECU event logs, ``can.log`` and the bridge trace (§5.9).
+"""Metrics of an online run from the ECU event logs, ``can.log`` and the bridge trace.
 
 - hop latency = rx log time - tx log time of the same (msg, counter) (latest tx before the rx)
 - jitter = std and max-min of same-message intervals at the sender (tx) and receiver (rx)

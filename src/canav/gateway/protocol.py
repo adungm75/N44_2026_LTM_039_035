@@ -1,4 +1,4 @@
-"""Gateway UDP protocol "CAV1" (§5.8, docs/gateway_protocol.md).
+"""Gateway UDP protocol "CAV1" (docs/gateway_protocol.md).
 
 All fields in network byte order::
 

@@ -1,4 +1,4 @@
-# CAN ID assignment schemes (§5.10 E3).
+# CAN ID assignment schemes.
 # Each scheme maps message name -> CAN ID; messages not listed keep their matrix.yaml ID.
 
 schemes:

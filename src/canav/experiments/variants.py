@@ -1,10 +1,10 @@
-"""Network variants for the experiments (§5.10): the ``network:`` section of an
+"""Network variants for the experiments: the ``network:`` section of an
 experiment YAML, applied in this order to the network loaded with its ID scheme:
 
 ``period_factor``  multiply every period (and default deadline D = T) — E2
 ``dlc``            set the DLC of every periodic message (payload is not simulated) — E2
 ``target_load``    add synthetic messages until the theoretical load reaches it — E3/E4
-``deadlines``      AEB-chain deadlines from the budget config (§5.12.1, same numbers as
+``deadlines``      AEB-chain deadlines from the budget config (same numbers as
                    ``results/budget/aeb_budget.json``)
 ``topology``       two buses joined by the gateway — E5
 

@@ -1,4 +1,4 @@
-"""End-to-end protection: CRC8 SAE J1850 + 4-bit alive counter (§5.1).
+"""End-to-end protection: CRC8 SAE J1850 + 4-bit alive counter.
 
 Layout for a DLC-``n`` frame (n in {4, 8}):
 - byte ``n-1``          : CRC8 over bytes ``0..n-2`` followed by DataID (low byte of CAN ID)

@@ -47,7 +47,7 @@
 - **Thống kê**: SimPy rất tuần hoàn nên kết quả bộ phát hiện là cận trên lạc quan; online chỉ có một run
   huấn luyện và một run cho mỗi loại anomaly, không có khoảng tin cậy.
 - **CARLA**: chạy không camera (server crash khi bật camera); bridge CARLA được ngoại lệ ngân sách RAM.
-- **Chưa làm**: thí nghiệm tốc độ tránh va chạm tối đa (§5.12.5, P1), CAN FD (E6, P2), Isolation Forest
+- **Chưa làm**: thí nghiệm tốc độ tránh va chạm tối đa (P1), CAN FD (E6, P2), Isolation Forest
   (P2), Wireshark dissector (P2).
 
 ## 4.4 Hướng phát triển

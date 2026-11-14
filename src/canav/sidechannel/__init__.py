@@ -1,4 +1,4 @@
-"""Non-CAN side channel over UDP 127.0.0.1 (decision D4, §5.6).
+"""Non-CAN side channel over UDP 127.0.0.1.
 
 Bridge -> ECUs: ``{"type": "state", ...}`` to ``port_base + 1 + node index`` (47001-47010).
 Actuators -> bridge: ``{"type": "ctrl", ...}`` to ``port_base + 100`` (47100).

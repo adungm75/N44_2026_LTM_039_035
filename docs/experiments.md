@@ -1,6 +1,6 @@
 # Thí nghiệm (Phase 6)
 
-Đặc tả: §5.10 (thí nghiệm), §5.12 (tiêu chí đánh giá). Mọi số liệu trong tài liệu
+Mọi số liệu trong tài liệu
 này lấy từ `report/tables/criteria_summary.csv` và `report/tables/criteria_variants.csv` (sinh
 tự động); không có số nào viết tay.
 
@@ -12,7 +12,7 @@ make experiments           # SimPy: budget -> E0..E5, E7, E8 (60 s x 5 seed, cac
 make experiments-online    # USER: vcan0 đã bật (sudo scripts/setup_vcan.sh); ~7 phút (gồm E8 online)
 ```
 
-- `make budget` → `results/budget/aeb_budget.json` (budget end-to-end chuỗi AEB, §5.12.1).
+- `make budget` → `results/budget/aeb_budget.json` (budget end-to-end chuỗi AEB).
 - `make experiments` chạy mọi `config/experiments/E*.yaml` song song (`JOBS=4`), bỏ qua run đã có
   `metrics.json` (thêm `--force` khi gọi `python -m canav.experiments.run` để chạy lại). Thời gian
   đo trên máy dự án: 2 phút 51 giây cho 225 run.
@@ -51,7 +51,7 @@ Khóa biến thể mạng (`canav.experiments.variants`, áp theo thứ tự):
 | E3 | `safety_first`/`naive` × tải 30/60/90 % | tải đạt bằng message tổng hợp của E4 |
 | E4 | tải 30/50/70/80/90/100/110 % | xem "Tải tổng hợp" |
 | E5 (P1) | độ trễ gateway 0.1/0.5/1 ms × vị trí AEB (chassis/ADAS) | Chassis: ChassisSensors, Control, 2 actuator, AEB; ADAS: Perception, Planning, BodyHMI, GNSS (chọn: GNSS chỉ cấp cho Planning) |
-| E7_drop | drop 1/5/10 % tại mọi node | theo §5.10 |
+| E7_drop | drop 1/5/10 % tại mọi node | theo đặc tả |
 | E7_delay | trễ thêm 1/2/5/10/20 ms tại mọi node | chọn: từ 1/10 tới 2 lần chu kỳ ngắn nhất (10 ms) |
 | E7_error | xác suất lỗi mỗi lần truyền 0.001…0.2 tại mọi node | chọn quanh ngưỡng trôi TEC p = 1/9 (+8 mỗi lỗi, −1 mỗi lần thành công) |
 
@@ -69,7 +69,7 @@ Khóa biến thể mạng (`canav.experiments.variants`, áp theo thứ tự):
 - Lý thuyết: bản sao có jitter phát = độ trễ gateway + (R − C) của message nguồn; lặp tới điểm bất
   động vì hai bus chép sang nhau. Metrics: khóa `0x300@chassis` cho bản sao.
 
-## Tiêu chí (§5.12, `canav.analysis.criteria`)
+## Tiêu chí (`canav.analysis.criteria`)
 
 Mỗi biến thể được xét trên mọi seed (một seed trượt là biến thể trượt):
 - **theory_ok**: mọi message định kỳ (cả tổng hợp, cả bản sao) có WCRT Davis và WCRT ≤ D.
@@ -83,13 +83,13 @@ Mỗi biến thể được xét trên mọi seed (một seed trượt là biế
   ở T (chọn). Tốc độ thiết kế 60 km/h (chọn: đầu trên dải quét của advisor).
 - E4: tải cao nhất đạt mọi deadline so với 50 % (có verdict) và 70 % (chỉ tham chiếu), quyết định
   của USER.
-- E2E (§5.12.4): sim — số instance mất nằm giữa hai frame nhận được (đếm chính xác theo số thứ tự)
+- E2E: sim — số instance mất nằm giữa hai frame nhận được (đếm chính xác theo số thứ tự)
   so với số khoảng trống counter; online — số chuỗi drop của Control so với `counter_err` ở
   actuator; Control im lặng → thời gian tới safe state > 3 chu kỳ.
 
 ## Giới hạn của phép đo
 
-- **e2e theo origin mới nhất (§5.4 quy tắc 4)**: 8 frame ObjectList cùng một mốc phát, nên khi mất
+- **e2e theo origin mới nhất**: 8 frame ObjectList cùng một mốc phát, nên khi mất
   1 frame thì AEB vẫn có origin mới từ 7 frame còn lại. Vì vậy E7_drop không làm chuỗi AEB trượt
   trong dải quét, dù thông tin của vật trong frame bị mất đã cũ thêm một chu kỳ. Mất frame được đánh
   giá riêng ở tiêu chí 4.
@@ -98,8 +98,8 @@ Mỗi biến thể được xét trên mọi seed (một seed trượt là biế
 - **Tốc độ thiết kế**: D chuỗi AEB (11.1 ms mỗi hop, giới hạn e2e) phụ thuộc mạnh vào tốc độ thiết
   kế; ở tốc độ thấp hơn budget lớn hơn và D = T.
 - Thời gian thực thi task trong SimPy là giả định (E0), chưa thay bằng số đo online.
-- §5.12.5 (tốc độ tránh va chạm tối đa, P1) chưa chạy: kịch bản sim2d hiện tại (người đi bộ xuất
-  hiện ở 12 m, xe giảm tốc khi qua xe đỗ) giới hạn kết quả trước cả mạng (xem PROGRESS.md).
+- Thí nghiệm tốc độ tránh va chạm tối đa (P1) chưa chạy: kịch bản sim2d hiện tại (người đi bộ xuất
+  hiện ở 12 m, xe giảm tốc khi qua xe đỗ) giới hạn kết quả trước cả mạng.
 
 ## Anomaly và bộ phát hiện (Phase 7: E8, E9)
 
@@ -115,7 +115,7 @@ ghi `route.json`, kéo dài 10 s; khoảng thời gian thật (CLOCK_REALTIME) g
 
 | Loại | SimPy | Online |
 |---|---|---|
-| flood | ID 0x000 mỗi 0.2 ms, 8 byte 0 (§5.10) | `cangen vcan0 -I 000 -L 8 -g 0.2` |
+| flood | ID 0x000 mỗi 0.2 ms, 8 byte 0 | `cangen vcan0 -I 000 -L 8 -g 0.2` |
 | silent | mọi frame của Perception bị bỏ trong khoảng | Perception `silent_after_s=20`, im tới hết run (ECU không có lỗi "chạy lại"); khoảng = từ frame ObjectList_0 đầu tiên bị thiếu tới hết log |
 | spoof | thêm Steer_Cmd 0x100 mỗi 10 ms, lệch 5 ms so với pha thật, counter đóng băng 0, CRC hợp lệ | như SimPy, gửi qua raw socket |
 | unknown_id | ID 0x6A1 mỗi 100 ms (chọn) | `cangen vcan0 -I 6A1 -L 8 -g 100` |
@@ -123,7 +123,7 @@ ghi `route.json`, kéo dài 10 s; khoảng thời gian thật (CLOCK_REALTIME) g
 ### Mô tả theo không gian thiết kế đánh giá CAN IDS (Sharmin et al., Journal of Computer Security, 2024)
 - **Loại IDS**: giám sát thụ động trên bus (thấy mọi frame), dựa trên luật và ngưỡng thống kê về
   thời gian, tần suất và E2E (không dùng nội dung tín hiệu, không học máy).
-- **Mô hình tấn công** (§5.12.7): kẻ tấn công không sửa được frame đang truyền và không chạm được
+- **Mô hình tấn công**: kẻ tấn công không sửa được frame đang truyền và không chạm được
   vào bộ phát hiện.
   - flood: phát được ID tùy ý (node bị chiếm hoặc thiết bị gắn thêm), mục tiêu từ chối dịch vụ
     bằng cách thắng mọi lần phân xử.
@@ -137,7 +137,7 @@ ghi `route.json`, kéo dài 10 s; khoảng thời gian thật (CLOCK_REALTIME) g
 - **Chỉ số**: TPR theo loại anomaly, FPR toàn cục, độ trễ phát hiện, ROC theo k ∈ {2, 3, 4, 5}, bảng
   độ nhạy đặc trưng (μ_anom − μ_norm)/σ_norm.
 
-### Đặc trưng và luật (§5.11)
+### Đặc trưng và luật
 - Cửa sổ 100 ms, bước 100 ms, bỏ 1 s đầu (SimPy) / 3 s đầu (online) (chọn: offset ngẫu nhiên và
   thời gian khởi động ECU); cửa sổ là anomaly nếu chồng lên khoảng anomaly.
 - Đặc trưng: tải, số frame, số frame mỗi ID, inter-arrival cùng ID (mean/std/max trong cửa sổ),

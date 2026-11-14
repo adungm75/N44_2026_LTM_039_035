@@ -1,6 +1,6 @@
 # Chương 1. Thiết kế hệ thống
 
-> Bản nháp. Đặc tả gốc: `` §2, §5. Chi tiết cài đặt: `docs/architecture.md`,
+> Bản nháp. Chi tiết cài đặt: `docs/architecture.md`,
 > `docs/gateway_protocol.md`.
 
 ## 1.1 Mục tiêu

@@ -1,4 +1,4 @@
-# Source of truth for the CAN network (§5.1, decision D7).
+# Source of truth for the CAN network.
 # config/dbc/canav.dbc is generated from this file (`make dbc`); never edit the DBC by hand.
 #
 # Units: SI. period/deadline/jitter in seconds; period null = event-triggered.

@@ -12,7 +12,7 @@ lint:
 	$(UV) run ruff check .
 	$(UV) run ruff format --check .
 
-# Targets below are implemented in later phases (see §6).
+# Targets below are implemented in later phases.
 dbc:
 	$(UV) run python -m canav.netdef.dbc --out config/dbc/canav.dbc
 
@@ -24,7 +24,7 @@ sim-baseline:
 
 JOBS ?= 4
 
-budget:  # AEB chain end-to-end budget (§5.12.1)
+budget:  # AEB chain end-to-end budget
 	$(UV) run python -m canav.timing.budget
 
 experiments: theory budget  # all SimPy experiments incl. E8 (cached), summary, E9 detector, criteria

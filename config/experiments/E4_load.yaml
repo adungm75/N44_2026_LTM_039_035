@@ -1,5 +1,5 @@
 # E4 (P0): synthetic messages up to 30..110 % theoretical (worst-case) load.
-# Verdicts (§5.12.2-3): highest load with every deadline met; vs 50 % (verdict) and 70 % (reported).
+# Verdicts: highest load with every deadline met; vs 50 % (verdict) and 70 % (reported).
 base: config/experiments/E0_baseline.yaml
 name: E4
 description: Synthetic load 30/50/70/80/90/100/110 %, otherwise E0.

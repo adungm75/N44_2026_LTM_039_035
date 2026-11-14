@@ -1,4 +1,4 @@
-"""CARLA backend (P1, §5.7): Town02, synchronous mode + Traffic Manager sync,
+"""CARLA backend (P1): Town02, synchronous mode + Traffic Manager sync,
 NPC vehicles and walkers, ``GlobalRoutePlanner`` route, ground truth from ``world.get_actors()``.
 
 CARLA is left-handed (x forward, y right, yaw clockwise in degrees, steer > 0 = right).

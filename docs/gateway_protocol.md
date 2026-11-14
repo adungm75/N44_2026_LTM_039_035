@@ -1,8 +1,7 @@
 # Giao thức gateway CAN ↔ UDP "CAV1" (Phase 5)
 
 Mã nguồn: `canav.gateway.protocol` (mã hóa/giải mã, batching), `canav.gateway` (tiến trình
-gateway), `canav.monitor` (bên nhận). Cấu hình: `config/online/gateway.yaml`. Đặc tả gốc:
-§5.8.
+gateway), `canav.monitor` (bên nhận). Cấu hình: `config/online/gateway.yaml`.
 
 ## Kiến trúc
 
@@ -84,5 +83,4 @@ DATA, `seq` = 5, 2 record (dữ liệu minh họa, sinh bằng `encode()`):
 - Đo: `scripts/measure_gateway.py` (`make gateway-bench`) chạy stack sim2d trên vcan0 làm nguồn
   lưu lượng, rồi lần lượt batch 1/8/32 × timeout 1/5 ms, mỗi cấu hình 15 s, đồng thời chạy
   `canbusload` (worst-case và `-e`). Kết quả: `report/tables/gateway_latency.csv`,
-  `report/tables/monitor_vs_canbusload.csv`, `results/gateway/<ts>/summary.json`. Số liệu của lần
-  chạy Phase 5 ghi trong PROGRESS.md.
+  `report/tables/monitor_vs_canbusload.csv`, `results/gateway/<ts>/summary.json`.

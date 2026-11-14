@@ -1,5 +1,5 @@
 # E7 (P0) faults, part 1: frames dropped at the sender (all nodes, all messages) 1/5/10 %.
-# Verdict (§5.12.3): highest drop rate before the AEB chain misses its deadline or a bus-off.
+# Verdict: highest drop rate before the AEB chain misses its deadline or a bus-off.
 base: config/experiments/E0_baseline.yaml
 name: E7_drop
 description: Sender-side drop probability, all nodes.

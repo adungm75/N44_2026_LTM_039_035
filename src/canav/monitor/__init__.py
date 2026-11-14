@@ -1,4 +1,4 @@
-"""Monitor for the gateway uplink (§5.8).
+"""Monitor for the gateway uplink.
 
 Decodes CAV1 datagrams and computes: UDP loss by ``seq``, gateway latency
 ``t_monitor_rx - t_rx_ns`` (both CLOCK_REALTIME; ``t_monitor_rx`` = ``time.time_ns()`` right

@@ -1,4 +1,4 @@
-"""Generate the DBC from the network definition (decision D7: never edit the DBC by hand).
+"""Generate the DBC from the network definition (never edit the DBC by hand).
 
 CLI: ``python -m canav.netdef.dbc --out config/dbc/canav.dbc``
 """

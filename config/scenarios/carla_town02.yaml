@@ -1,6 +1,6 @@
-# CARLA scenario (§5.7, Phase 4). Town02, synchronous mode, ego driven only by
+# CARLA scenario (Phase 4). Town02, synchronous mode, ego driven only by
 # CAN commands. Values are scenario PARAMETERS (chosen) unless marked "measured".
-dt: 0.05                     # fixed_delta_seconds = bridge tick [s] (§5.6), paced to real time
+dt: 0.05                     # fixed_delta_seconds = bridge tick [s], paced to real time
 host: localhost
 port: 2000
 timeout: 60.0                # [s] client RPC timeout

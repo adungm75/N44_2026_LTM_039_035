@@ -1,6 +1,6 @@
 # E3 (P0): ID scheme safety_first vs naive (AEB_BrakeRequest at 0x600) at 30/60/90 % load,
 # reached with the synthetic load of E4 (canav.experiments.variants).
-# Verdict (§5.12.3): (scheme, load) where the AEB chain misses its deadline.
+# Verdict: (scheme, load) where the AEB chain misses its deadline.
 base: config/experiments/E0_baseline.yaml
 name: E3
 description: ID scheme x total load, otherwise E0.

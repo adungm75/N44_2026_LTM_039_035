@@ -1,4 +1,4 @@
-"""CAN <-> UDP gateway on raw sockets (§5.8, decision D5: no python-can here).
+"""CAN <-> UDP gateway on raw sockets (no python-can here).
 
 One ``selectors`` loop:
 

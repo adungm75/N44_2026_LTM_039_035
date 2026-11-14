@@ -1,4 +1,4 @@
-"""AEB chain end-to-end time budget (§5.12.1).
+"""AEB chain end-to-end time budget.
 
 At the AEB trigger the gap is d = v·TTC. Stopping without impact needs v·L + v²/(2a) <= d,
 so the end-to-end budget is ``L_max(v) = TTC - v/(2a)`` (kinematic, no brake ramp-up).

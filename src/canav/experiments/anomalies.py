@@ -1,12 +1,12 @@
-"""Labelled anomalies for E8 (§5.10, threat model §5.12.7) in the SimPy model.
+"""Labelled anomalies for E8 in the SimPy model.
 
 ``sim.anomalies`` items: ``{type, start, end}`` [s] plus optional overrides. Defaults:
 
-- ``flood``: ID 0x000 every 0.2 ms, 8 zero bytes (§5.10); wins every arbitration.
-- ``silent``: every frame of ``node`` (Perception, §5.10) dropped at the sender.
+- ``flood``: ID 0x000 every 0.2 ms, 8 zero bytes; wins every arbitration.
+- ``silent``: every frame of ``node`` (Perception) dropped at the sender.
 - ``spoof``: extra Steer_Cmd 0x100 every 10 ms, 5 ms after the legitimate phase (chosen),
   frozen AliveCounter 0 with a *valid* CRC (chosen: CRC8 and DataID are not secret, the
-  attacker does not track the counter state, §5.12.7).
+  attacker does not track the counter state).
 - ``unknown_id``: ID 0x6A1 every 100 ms (period chosen), 8 zero bytes.
 
 The interval ``[start, end)`` is the ground truth for window labels (also kept as the

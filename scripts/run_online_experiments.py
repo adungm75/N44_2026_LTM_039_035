@@ -2,9 +2,9 @@
 """Online experiments of Phase 6 (USER: vcan0 up): sim2d stack on vcan0, processes + gateway.
 
 - ``E0``: baseline, until the goal (driving metrics, 0 CRC/counter errors).
-- ``E7_drop5_control``: Control drops 5 % of its frames (§5.10 E7 online).
+- ``E7_drop5_control``: Control drops 5 % of its frames ( online).
 - ``E7_silent_control``: Control goes silent at 20 s; actuators must enter the safe state
-  after the watchdog limit (§5.12.4).
+  after the watchdog limit.
 - ``--carla``: also ``E0_carla`` (needs a running CARLA server).
 
 Results: ``results/online_exp/<name>/`` (skipped if ``metrics.json`` exists, ``--force``).

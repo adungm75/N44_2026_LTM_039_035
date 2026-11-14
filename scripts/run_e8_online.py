@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""E8 online (§5.10; USER: vcan0 up, can-utils): one anomaly per run of the
+"""E8 online (USER: vcan0 up, can-utils): one anomaly per run of the
 sim2d stack on vcan0. The anomaly starts 20 s after the bridge wrote ``route.json`` and lasts
 10 s (chosen, same as the SimPy E8); its CLOCK_REALTIME interval is written to
 ``results/online_exp/E8_<type>/anomalies.json`` for the window labels (E9).
 
-- ``flood``: ``cangen <if> -I 000 -L 8 -D 0000000000000000 -g 0.2`` (§5.10);
+- ``flood``: ``cangen <if> -I 000 -L 8 -D 0000000000000000 -g 0.2``;
 - ``unknown_id``: ``cangen <if> -I 6A1 -L 8 -D 0000000000000000 -g 100`` (100 ms, chosen);
 - ``spoof``: raw socket, Steer_Cmd 0x100 every 10 ms, frozen AliveCounter 0 with a valid CRC
   (same attacker as the SimPy E8);

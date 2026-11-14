@@ -4,8 +4,6 @@ Mạng CAN ~10 nút cho xe tự hành mô phỏng (đồ án Lập trình mạng
 tiếp qua CAN (SocketCAN `vcan0`), xe mô phỏng bằng `sim2d` hoặc CARLA, mô hình bus SimPy cho các thí
 nghiệm, gateway CAN↔UDP bằng raw socket và bộ phát hiện bất thường dựa trên ngưỡng/thống kê.
 
-Đặc tả và các phase: ``. Tiến độ và quyết định: `PROGRESS.md`.
-
 ## Tái lập kết quả (3 lệnh)
 
 ```bash

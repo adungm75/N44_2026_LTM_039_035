@@ -1,4 +1,4 @@
-"""Threshold/statistical detector (§5.11) and the E9 evaluation.
+"""Threshold/statistical detector and the E9 evaluation.
 
 Rules per 100 ms window (μ, σ from the normal training windows):
 

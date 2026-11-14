@@ -1,4 +1,4 @@
-"""Online ECU runtime (§5.5): python-can bus, DBC, absolute-deadline scheduler,
+"""Online ECU runtime: python-can bus, DBC, absolute-deadline scheduler,
 automatic E2E counter/CRC, rx checks and a JSONL event log per ECU.
 
 Event log line: ``{t_ns, ecu, event, msg, counter, src?}`` with ``t_ns = time.monotonic_ns()``

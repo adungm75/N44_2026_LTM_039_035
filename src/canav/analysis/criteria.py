@@ -1,11 +1,11 @@
-"""Evaluation criteria (§5.12) -> ``report/tables/criteria_summary.csv``.
+"""Evaluation criteria -> ``report/tables/criteria_summary.csv``.
 
 Inputs: ``results/summary.parquet`` (SimPy runs), ``results/budget/aeb_budget.json``,
 ``results/online_exp/*`` (online runs, optional) and ``report/tables/gateway_latency.csv``
 (Phase 5). Also writes ``report/tables/criteria_variants.csv``: the per-variant judgement the
 breaking points are taken from.
 
-Per variant, over all seeds (a variant fails if any seed fails, §5.12.3):
+Per variant, over all seeds (a variant fails if any seed fails):
 
 - ``theory_ok``: every periodic message (incl. synthetic and gateway copies) has a Davis
   WCRT and WCRT <= D;
@@ -35,9 +35,9 @@ LOAD_THRESHOLD = 0.50  # CiA "Designing a CAN network" (rule of thumb), level de
 LOAD_REFERENCE = 0.70  # SAE J1939 / CANopen practice, reported without verdict (USER)
 SRC_LOAD = 'CiA "Designing a CAN network" (rule of thumb; level decided by USER 2026-11-13)'
 SRC_REF = "SAE J1939 / CANopen practice (rule of thumb; reference only, USER 2026-11-13)"
-SRC_D = "D = T (chosen, §5.12.1); AEB chain D from results/budget/aeb_budget.json"
+SRC_D = "D = T (chosen); AEB chain D from results/budget/aeb_budget.json"
 SRC_E2E = "chain e2e limit (0.6 + 0.2) x L_max at design speed (aeb_budget.json; chosen split)"
-SRC_WD = "§5.5: safe state after > 3 missed cycles (watchdog_cycles = 3)"
+SRC_WD = "safe state after > 3 missed cycles (watchdog_cycles = 3)"
 
 
 def _ms(x) -> str:
@@ -100,7 +100,7 @@ def _param(v: pd.DataFrame, key: str) -> pd.Series:
 
 
 def _bracket(values: list, ok: list[bool], highest: bool) -> tuple[object, str]:
-    """Last passing value of a monotone sweep and the bracket text (§5.12.3)."""
+    """Last passing value of a monotone sweep and the bracket text."""
     pairs = sorted(zip(values, ok, strict=True), reverse=not highest)
     best, first_fail = None, None
     for val, good in pairs:
@@ -192,7 +192,7 @@ def build(
             "baseline E2E: instances lost / counter gaps (sim)",
             f"{lost} lost, max counter loss {e0['loss_counter'].max():.4f}",
             "0",
-            "§5.12.4",
+            "project spec",
             pf(lost == 0 and e0["loss_counter"].max() == 0),
         )
 
@@ -336,7 +336,7 @@ def build(
             "injected losses detected by the alive counter (sim, between delivered frames)",
             f"{detected} detected / {between} lost ({int(ed['n_dropped'].sum())} drops injected)",
             "all",
-            "§5.12.4",
+            "project spec",
             pf(detected == between),
         )
 
@@ -351,7 +351,7 @@ def build(
                 f"batch {r.batch_frames}, flush {r.flush_ms} ms",
                 f"p50 {r.lat_p50_us:.0f} us, p99 {r.lat_p99_us:.0f} us, UDP lost {r.udp_lost}",
                 "none",
-                "§5.12.6: no threshold",
+                "no threshold",
                 "n/a",
             )
     if detector_csv is not None and detector_csv.exists():
@@ -362,7 +362,7 @@ def build(
         "maximum avoidance speed vs drop/delay at Control/AEB",
         "not run",
         "-",
-        "§5.12.5",
+        "project spec",
         "n/a (P1, not run in Phase 6)",
     )
     return rows, v
@@ -372,7 +372,7 @@ DETECTOR_K = 3  # chosen for the summary rows: middle of the k sweep (classic 3 
 
 
 def detector_rows(ev: pd.DataFrame) -> list[dict]:
-    """§5.12.4 (spoofing detected by the E2E counter, R5) and §5.12.7 (detector, no threshold)."""
+    """Spoofing detected by the E2E counter (R5) and the detector (no threshold)."""
     rows = []
 
     def add(crit, exp, item, measured, threshold, source, verdict):
@@ -399,7 +399,7 @@ def detector_rows(ev: pd.DataFrame) -> list[dict]:
                 "spoofed Steer_Cmd windows with E2E counter errors (R5)",
                 f"{r5:.3f} of {int(sp['windows'].iloc[0])} windows",
                 "1.0 (every window)",
-                "§5.12.4: every injected fault detected",
+                "every injected fault detected",
                 "pass" if r5 >= 1.0 else "fail",
             )
         gk = g[g["k"] == DETECTOR_K]
@@ -411,7 +411,7 @@ def detector_rows(ev: pd.DataFrame) -> list[dict]:
                 f"{r.tpr:.4f} ({r.windows} windows), delay mean {r.delay_mean_s:.3f} s / "
                 f"max {r.delay_max_s:.3f} s, missed {int(r.missed)}/{int(r.occurrences)}",
                 "none",
-                "§5.12.7: no threshold",
+                "no threshold",
                 "n/a",
             )
         al = gk[gk["anomaly"] == "all"].iloc[0]
@@ -421,7 +421,7 @@ def detector_rows(ev: pd.DataFrame) -> list[dict]:
             f"global FPR (k = {DETECTOR_K})",
             f"{al.fpr:.5f} ({int(al.normal_windows)} normal windows)",
             "none",
-            "§5.12.7: no threshold",
+            "no threshold",
             "n/a",
         )
         roc = g[g["anomaly"] == "all"].sort_values("k")
@@ -431,7 +431,7 @@ def detector_rows(ev: pd.DataFrame) -> list[dict]:
             "ROC over k (FPR, TPR)",
             "; ".join(f"k={int(r.k)}: ({r.fpr:.5f}, {r.tpr:.4f})" for r in roc.itertuples()),
             "none",
-            "§5.12.7: no threshold",
+            "no threshold",
             "n/a",
         )
     return rows
@@ -465,7 +465,7 @@ def online_rows(root: Path) -> list[dict]:
             "baseline CRC + counter errors (vcan0)",
             f"{m['errors']['crc_err']} crc, {m['errors']['counter_err']} counter",
             "0",
-            "§5.12.4",
+            "project spec",
             "pass" if err == 0 else "fail",
         )
     drop = root / "E7_drop5_control"
@@ -491,7 +491,7 @@ def online_rows(root: Path) -> list[dict]:
             "drop runs detected as counter gaps at actuators",
             f"{detected} detected / {injected_runs} drop runs",
             "all",
-            "§5.12.4",
+            "project spec",
             "pass" if detected == injected_runs else "fail",
         )
     silent = root / "E7_silent_control"

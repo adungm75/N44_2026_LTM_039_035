@@ -1,4 +1,4 @@
-"""Online ECUs on SocketCAN / python-can virtual (§5.5)."""
+"""Online ECUs on SocketCAN / python-can virtual."""
 
 from __future__ import annotations
 

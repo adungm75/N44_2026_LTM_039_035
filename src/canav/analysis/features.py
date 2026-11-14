@@ -1,6 +1,6 @@
-"""Window features for anomaly detection (§5.11).
+"""Window features for anomaly detection.
 
-Input: a ``candump -L`` log (both tiers, D6) plus, for SimPy runs only, ``errors.jsonl``
+Input: a ``candump -L`` log (both tiers) plus, for SimPy runs only, ``errors.jsonl``
 (error frames) and ``frames.jsonl`` (queuing delays). Windows of ``window_s`` (100 ms), step =
 window, aligned to ``t_start``; only complete windows inside ``[t_start, t_end)`` are kept.
 

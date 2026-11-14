@@ -1,4 +1,4 @@
-"""Read/write the ``candump -L`` text log format (decision D6), shared by both tiers.
+"""Read/write the ``candump -L`` text log format, shared by both tiers.
 
 Line format: ``(<sec>.<usec>) <iface> <id>#<hexdata>``; 3 hex digits = 11-bit ID, 8 = 29-bit.
 Also accepted: remote frames ``<id>#R[<dlc>]`` and CAN FD ``<id>##<flags><hexdata>``.

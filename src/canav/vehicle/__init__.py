@@ -1,4 +1,4 @@
-"""Vehicle backends (§5.7): common interface and data types."""
+"""Vehicle backends: common interface and data types."""
 
 from __future__ import annotations
 

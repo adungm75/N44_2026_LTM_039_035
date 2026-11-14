@@ -36,7 +36,7 @@ def build(results: Path, tables: Path) -> str:
         "",
         "Tài liệu này được sinh tự động bởi `python -m canav.analysis.results_doc` (`make figures`)",
         "từ `results/` và `report/tables/`; mọi số dưới đây đều tính từ các file đó. Phương pháp và",
-        "giới hạn: `docs/experiments.md`. Tiêu chí: §5.12.",
+        "giới hạn: `docs/experiments.md`.",
         "",
     ]
 
@@ -224,7 +224,7 @@ def build(results: Path, tables: Path) -> str:
     out += [
         "",
         "Nguồn của mỗi ngưỡng nằm ở cột `threshold_source` của bảng CSV. `n/a`: tiêu chí không có "
-        "ngưỡng (gateway, bộ phát hiện) hoặc chưa chạy (§5.12.5, P1).",
+        "ngưỡng (gateway, bộ phát hiện) hoặc chưa chạy (P1).",
         "",
     ]
     return "\n".join(out)

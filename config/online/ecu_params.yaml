@@ -1,4 +1,4 @@
-# Online ECU parameters (§5.5). Calibration values are PARAMETERS (chosen).
+# Online ECU parameters. Calibration values are PARAMETERS (chosen).
 sidechannel:
   port_base: 47000           # state -> port_base + 1 + node index; ctrl -> port_base + 100
 vehicle:                     # controller's model of the vehicle (calibration)
