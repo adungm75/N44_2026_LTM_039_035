@@ -12,7 +12,7 @@ from canav.ecu.base import EcuBase
 from canav.sidechannel import UdpSender, ctrl_message, ctrl_port
 from canav.vehicle import TL_STATES
 from canav.vehicle.route import Route, wrap_angle
-
+# Số lượng khung truyền cố định dành cho danh sách vật cản trên bus CAN
 N_OBJECT_FRAMES = 8
 
 
@@ -37,6 +37,7 @@ class ChassisSensors(EcuBase):
             return
         v, imu = st["speed"], st["imu"]
         half_track = self.veh["track"] / 2
+        # Tính tốc độ bánh trái/phải dựa trên vận tốc xe và vận tốc góc quay vòng (yaw_rate)
         self.send(
             "WheelSpeed",
             {
@@ -45,6 +46,7 @@ class ChassisSensors(EcuBase):
                 "v_right": max(0.0, v + imu["yaw_rate"] * half_track),
             },
         )
+        # Gửi dữ liệu gia tốc dọc, gia tốc ngang và vận tốc góc từ cảm biến IMU
         self.send("IMU", {"ax": imu["ax"], "ay": imu["ay"], "yaw_rate": imu["yaw_rate"]})
 
 
@@ -74,6 +76,7 @@ class Perception(EcuBase):
         rng, half = self.p["range"], self.p["corridor_half_width"]
         c, s = math.cos(yaw), math.sin(yaw)
         objs = []
+        # Lọc các vật cản nằm trong hành lang phía trước xe
         for o in st["objects"]:
             ex, ey = _to_ego(o["x"], o["y"], x, y, yaw)
             th = o["yaw"] - yaw
@@ -83,7 +86,9 @@ class Perception(EcuBase):
                 continue
             rel_vx = c * o["vx"] + s * o["vy"] - st["speed"]
             objs.append((gap, ey, rel_vx, o))
+        # Sắp xếp vật cản theo khoảng cách tăng dần (ưu tiên vật gần nhất lên đầu)
         objs.sort(key=lambda t: t[0])
+        # Luôn phát đủ 8 frame ObjectList (nếu thiếu vật cản thì điền frame trống valid=0)
         for k in range(N_OBJECT_FRAMES):
             if k < len(objs):
                 gap, ey, rel_vx, o = objs[k]
@@ -98,6 +103,7 @@ class Perception(EcuBase):
             else:
                 vals = {"valid": 0, "cls": 0, "obj_id": 0, "x": 0, "y": 0, "rel_vx": 0}
             self.send(f"ObjectList_{k}", vals)
+            # Gửi thông tin trạng thái đèn giao thông và độ lệch làn đường
         tl = st["tl"]
         self.send(
             "TrafficLight_Lane",
@@ -156,9 +162,11 @@ class Planning(EcuBase):
     def target_speed(self, s: float) -> float:
         p = self.p
         v = p["v_cruise"]
+        # 1. Giới hạn tốc độ khi vào cua dựa trên gia tốc ngang cực đại (a_lat = v^2 * k)
         kmax = self.route.max_abs_curvature(s, s + max(10.0, 2 * self.speed))
         if kmax > 1e-6:
             v = min(v, math.sqrt(p["a_lat_max"] / kmax))
+            # 2. Giảm tốc theo vật cản phía trước
         for o in self.objects.values():
             if not o["valid"]:
                 continue
@@ -166,6 +174,7 @@ class Planning(EcuBase):
                 v = min(v, self._stop(o["x"] - p["obstacle_stop_gap"]))
             elif o["x"] < p["pass_distance"]:
                 v = min(v, p["v_pass"])
+                # 3. Xử lý đèn giao thông
         if self.tl is not None:
             state, dist = int(self.tl["tl_state"]), self.tl["dist_stop"]
             stop_dist = self.speed**2 / (2 * p["a_comf"])
@@ -179,6 +188,7 @@ class Planning(EcuBase):
         if self.pose is None:
             return
         x, y, h = self.pose
+        # Chiếu vị trí hiện tại lên quỹ đạo tham chiếu để lấy quãng đường đã đi s
         s, _ = self.route.project(x, y)
         pts = [_to_ego(*self.route.point_at(s + d), x, y, h) for d in self.p["lookahead"]]
         src = dict(self.used)
