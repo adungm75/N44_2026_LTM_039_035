@@ -12,7 +12,7 @@ import socket
 import time
 
 from canav.vehicle import VehicleState
-
+# --- Cấu hình mạng UDP mặc định ---
 HOST = "127.0.0.1"
 PORT_BASE = 47000
 CTRL_OFFSET = 100
