@@ -45,12 +45,15 @@ from canav.gateway.protocol import (
     decode,
     encode,
 )
-
+# Cấu trúc khung CAN chuẩn (Classic CAN 2.0) trong C/Linux dài đúng 16 byte:
+# I (4B): can_id + cờ | B (1B): độ dài payload (DLC) | 3x (3B): padding | 8s (8B): dữ liệu
 CAN_FRAME = struct.Struct("=IB3x8s")  # struct can_frame (classic CAN, 16 B)
+# Hằng số tùy chọn socket của nhân Linux để lấy dấu thời gian nanosecond từ kernel và đếm gói tràn bộ đệm
 SO_TIMESTAMPNS = getattr(socket, "SO_TIMESTAMPNS", 35)  # Linux value if Python lacks it
 SO_RXQ_OVFL = getattr(socket, "SO_RXQ_OVFL", 40)
 TIMESPEC = struct.Struct("=qq")
 ANC_SIZE = socket.CMSG_SPACE(TIMESPEC.size) + socket.CMSG_SPACE(4)
+# Kích thước vùng đệm dữ liệu phụ trợ (ancillary data / cmsg) chứa timestamp và bộ đếm drop
 DEFAULT_CONFIG = Path("config/online/gateway.yaml")
 
 
@@ -232,10 +235,12 @@ class Gateway:
                 now = time.monotonic_ns()
                 if t_end is not None and now >= t_end:
                     break
+                # Ngủ chờ sự kiện đọc từ socket CAN/UDP hoặc đến hạn xử lý định kỳ (tối đa 0.1s)
                 timeout = max(0.0, min((self.next_deadline(now) - now) / 1e9, 0.1))
                 for key, _ in sel.select(timeout):
                     key.data()
                 self.tick(time.monotonic_ns())
+                # Xả nốt các khung còn tồn trong hàng đợi và gửi thống kê cuối cùng trước khi thoát
             if self.batcher.pending:
                 self._send(TYPE_DATA, self.batcher.take())
             self._send(TYPE_STATS, stats=self.stats())
