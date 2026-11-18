@@ -53,6 +53,7 @@ def _pct(a, q) -> float | None:
 
 
 def _mean(rows: list[dict], key: str) -> float | None:
+    # Ánh xạ CAN ID chuẩn (11-bit) sang định nghĩa message trong file DBC
     return float(np.mean([r[key] for r in rows])) if rows else None
 
 
@@ -65,6 +66,7 @@ class Monitor:
         self.e2e_ids = {
             m.frame_id for m in db.messages if any(s.name == e2e.CRC_SIGNAL for s in m.signals)
         }
+        # Bộ đếm số gói UDP nhận được theo từng loại (DATA, STATS, HEARTBEAT...)
         self.datagrams = Counter()
         self.last_seq: int | None = None
         self.lost = self.reordered = self.bad = 0
